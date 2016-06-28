@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Denghejun.GitHub.io by denghejun</title>
+    <link rel="stylesheet" href="../stylesheets/styles.css">
+    <link rel="stylesheet" href="../stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="../javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+	  <!-- title here -->
+        <h1>Biz Command Pattern</h1>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+        <a href="https://github.com/denghejun" class="button fork"><strong>View On GitHub</strong></a>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+	<nav> 
+        <ul></ul>
+		<a href='../index.html'>Back Home</a>
+      </nav> 
+      <section>
+        <!-- blog content here -->
+		<h2>当我们在讨论一个Button逻辑时，我们在谈论什么</h2>
+		<p>
+		实际上，我们将较复杂的、较长的、较分散的耦合在一起的业务块封装到不同的方法并不是最佳选择，因为 Method始终是过程式的思维，无论你能把方法抽取得多么精准，如果不考虑 Method 的归属，这始终是个问题。
+一切皆对象（everything is object）在ruby这种“纯”面向对象语言中体现的很好，所以转变我们的编程思维极其重要，努力向OOP原则靠拢绝对不会是一件坏事。
+就我们的业务习惯而言，我们可以分析每当一个Button被点击后究竟发生了些什么？由浅入深可能是以下列表中所示：
+		</p>
+		<small>
+		<ul>
+		<li>就做了一件简单的事情，没有更多了</li>
+		<li>做事情之前，有多个前提，满足这些前提我才做</li>
+		<li>我想在做事情之前完成一个其他的事情，因为它不是我的主要工作，我想它的优先级能够直接体现出来，不要和我最重要的事情掺和</li>
+		<li>我想在做事情完成之后做一个其他事情，对于我来说，同样不是很重要，我甚至想异步去做，我才不关心它到底能不能成功呢！</li>
+		<li>我想在做事情之前和之后都做同样的事情（Log？），而不用真的直白地把我的代码写两遍！</li>
+		</ul>
+		</small>
+		
+		
+		<h2>如果是这样</h2>
+		<p>
+		不如我们将拥有着全部特性的东西称之为Command吧！确实，拥有上边所有特性对设计者来说并不是一件难事，用OO语言的多态就能搞定。
+如果拥有了Command，且我们强制使用Command来构建我们的业务逻辑，你会惊喜的发现，所有人写的代码都跟你自己写的一样，没有什么维护难度，我一眼就能：
+		</p>
+		<small>
+		<ul>
+		<li>知道它在干什么</li>
+		<li>哪里有什么问题</li>
+		<li>问题出在什么地方</li>
+		<li>我一定能在这个方法里找到那个不合适的 Check 逻辑</li>
+		<li>我能一口说出这个业务总共干了几件事，就算你不得已把他们堆到了一起也是如此</li>
+		</ul>
+		</small>
+		<p>
+		这里的Command可能和设计模式有出入，并非是指标准的 Command Pattern。
+我们来一步步初步实现这个Command看看，到底怎么样。
+		</p>
+		
+		<h2>Implement It</h2>
+		<h3>Command</h3>
+		<p>
+		做一件事情，不需要知道任何信息，也不需要任何反馈
+		<image src='../images/bizcmd/NoRequestNoResponse.png'>
+		
+		<h3>Command<T></h3>
+		<p>
+		做一件事情，需要知道某些信息，不需要任何反馈 或 不需要知道任何信息，需要有所反馈
+		<image src='../images/bizcmd/HasRequestOrHasResponse.png'>
+		</p>
+		
+		<h3>Command<TRequest, TResponse></h3>
+		<p>
+		做一件事情，需要知道某些信息，也需要有所反馈
+		<image src='../images/bizcmd/HasRequestHasResponse.png'>
+		</p>
+		
+		<h3>CommandProxy<T></h3>
+		<p>
+		不知从何时起，我不希望看到相关联的对象自己随意被构造（如果你非要那么做的话，没人能阻止你），事实上，我们需要管理这些对象的创建规则（俗称对象工厂），尤其是那些抽象出来的，相关联的各种对象；当然了，我们这里不用复杂的工厂了，就给Command做一个创建实例的代理即可，称之为CommandProxy。
+		<image src='../images/bizcmd/CommandProxy.png'>
+		</p>
+		
+		<h2>Test It</h2>
+		
+		就常见的 Command<TRequest, TResponse>做一个示例。
+		<p>
+		<small>简单的</small>
+		<image src='../images/bizcmd/SimpleSample.png'>
+		
+		<small>复杂的</small>
+		<image src='../images/bizcmd/ComplexSample.png'>
+		</p>
+		需要注意
+		<small>
+		<ul>
+		<li>并非所有 Override-able 的方法，你都得override，常见的Execute和CanExecute</li>
+		<li>Execute是abstract的，你必须实现它，因为要干什么事情只有你知道</li>
+		<li>除非CanExecute返回true，否则，你要做的事情将不会被执行</li>
+		<li>如果你想打破Command的执行顺序，你完全可以override InnerRun，甚至是Run方法（但我建议不要怎么做）</li>
+		</ul>
+		</small>
+		<p>
+		</p>
+		
+		<h2>Use It</h2>
+		<p>
+		用CommandProxy使用实现好的Command是这个样子的：
+		<image src='../images/bizcmd/UseCommand.png'>
+		</p>
+      </section>
+	  
+	  
+      <footer>
+	  <p><small>QQ:<a href="javascript:void(0)">1010267566</a>
+		Email:<a href="javascript:void(0)">denghejun@live.cn</a>
+		
+		<br/>Hosted on GitHub Pages <br/>&mdash;<a href="https://denghejun.github.io">leo deng</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+  </body>
+</html>
