@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Denghejun.GitHub.io by denghejun</title>
+    <link rel="stylesheet" href="../stylesheets/styles.css">
+    <link rel="stylesheet" href="../stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="../javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+	  <!-- title here -->
+        <h1>To make your app loose coupling and test-able</h1>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+        <a href="https://github.com/denghejun" class="button fork"><strong>View On GitHub</strong></a>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+	<nav> 
+        <ul></ul>
+		<a href='../index.html'>Back Home</a>
+      </nav> 
+      <section>
+        <!-- blog content here -->
+		<h2>单元测试的引入</h2>
+		<p>
+		TDD（测试驱动开发）将单元测试放到了一项工程的第一位，我觉得是工程师们对产品质量的不稳定性的一次深刻反思。既然产品质量、代码质量如此重要，与其反反复复的产生bug、回归测试、修改bug，不如一开始我们就动手测试它。当然，这次，我可不是要谈怎么做TDD。本文是想给那些有想着手做单元测试的开发者们却又没有好方案的一个指引。若你已经较为熟悉，也不妨看看我们想的是否一致。
+		</p>
+		
+		<h2>为什么一些开发人员讨厌写单元测试？</h2>
+		<p>
+		我想，大概是没有找到编写真正单元测试的方法。究其原因，无外乎有以下几点：
+		<ul>
+		<li>原生单元测试所用的数据往往令人头疼</li>
+		<li>被测逻辑组件没什么复杂逻辑，逻辑都在SQL里，数据不能反复测试,测了也白测，说不定某天就失败了</li>
+		<li>单元测试依赖一些其他配置信息，难以统一维护</li>
+		<li>数据或配置发生了变化，单元测试某一天大面积失败，一个个排查原因很烦躁</li>
+		</ul>
+		确实挺令人头疼的，我可不想为了单元测试而写这样的单元测试，因为我知道，那都是“骗人的”。
+		</p>
+		
+		<h2>什么是理想的单元测试呢？</h2>
+		<p>
+		当然，这是我个人的看法。我觉得它是这样的：
+		<ul>
+		<li>被测组件单元所依赖的其它组件提供的功能不能包含在内，因为那是其他组件单元要测试的部分</li>
+		<li>被测组件单元依赖的其他组件默认是正确返回的或模拟它的异常情况，测试被测组件处理异常的逻辑</li>
+		<li>被测组件单元所用到的所有数据不得依赖真实的文件/DB/远端调用（如API,WCF），有2个主要原因：一是文件/DB/远端调用都是一些IO/网络的访问，这些极有可能导致我们的单元测试失败，而它并不是真的逻辑错误；二是严重依赖DB/文件的数据往往就是dev/prd的数据，单元测试不应该去操作这些数据，它极有可能是非常严谨的且时时变化的</li>
+		</ul>
+		
+		</p>
+		
+		<h2>组件单元可测性与Moq</h2>
+		<p>
+		那得必须说到Moq组件了。Moq就是单元测试最佳助手，它是完全开源的，可到github上搜索。Moq重新阐述了单元测试的含义及重要性，它认为所谓的Mock，就是要模仿一些被测组件所依赖的组件的行为，来测试被测组件在各种工况下是否正常工作。所以，并不是常人所说的那样，仅仅mock数据而已，反而，我觉得最重要的确实行为。
+		</p>
+		<p>
+		要想写出可测试的组件单元，有很多种途径，但最佳实践方式我觉得还是“面向接口编程”，这也是Moq所推荐的做法。Moq之于.NET,只支持mock那些vitual/abstract的部件，而Interface是天生具备的这些特性的，所以面向接口编程是将你的程序变为可测、易测的第一步。
+		</p>
+		<h2>IOC（DI）与Moq</h2>
+		<p>
+		这两者本质上并没有任何关系，它们的方向点甚至都是不同的；一个用以探寻组件间低耦合依赖的最佳实践，另一个用来探寻单元测试的完美之道。其实往深处一想，他们有一个共同的概念在里面：“Dependency”。IOC所谓的依赖大多数是接口形式的依赖，Moq是模拟被测组件所需要的各种依赖；那么能结合IOC和Moq，在单元测试的时候，让IOC容器来自动管理被测组件所需要的依赖么？这个想法已被另一个开源的IOC组件Autofac捆绑实现。可见多往深处想想，信息量往往很大。
+		</p>
+		
+		<p>
+		Autofac不要仅仅用来做与单元测试的东西，不然你就太侮辱它了。看本文所要聊的其实就是用Autofac+Moq来做一个组件间低耦合、可测试的应用程序。前者用来解决低耦合，后者用来解决单元测试编写与执行。
+		</p>
+		
+		<h2>Autofac与Moq实现的单元测试</h2>
+		<p>
+		如果你是直接跳到这一小节的，我觉得你可能太着急了，因为理论是实践的重中之重，或许你应该看看前面的内容。
+首先，我们需要的包有：Autofac、Autofac.Configuration、Autofac.Extras.Moq、Moq。资源都可以通过Nuget或github获得。
+		</p>
+		
+		<h4>我们要实现什么功能</h4>
+		<p>
+		一个很小的demo，很简单，我有一个console app，需要执行一个功能：将2个整形数字的和乘以该2个数字的差，将接口以通知的信息打印到控制台。即：Print((a+b)*(a-b)).
+		</p>
+		
+		<h4>我们如何设计这个系统</h4>
+		<p>
+		<image src='../images/unit-test/sys-design.png'></br>
+		说明：</br>
+		<ul>
+		<li>Client依赖的AppDependentServices组件里只包含了2个Interface，表示Client的服务依赖</li>
+		<li>CalculateServiceProvider，NotifyServiceProvider是服务依赖组件的2个提供方组件</li>
+		<li>所有组件都是不同的程序集，client并未直接强依赖ServiceProvider</li>
+		</ul>
+		实现各个组件之后，我们在Console Client中加入如下代码，标识其核心业务逻辑:
+		<image src='../images/unit-test/console-core.png'></br>
+		说明：</br>
+		<ul>
+		<li>代码描述：创建一个基于配置文件的IOC 容器，并在有限的Scope中，从容器中取得我想要的服务进行调用</li>
+		<li>关于Autofac的使用，可自行github</li>
+		</ul>
+		OKay，程序已经可以正常Run起来了，结果也是正确的。
+		</p>
+		
+		<h4>我们如何测试这个系统</h4>
+		<p>
+		为了避免本文是TDD相关的嫌疑，我将单元测试放在了最后，你完全可以在系统设计完成后就着手单元测试。结合Autofac + Moq，测试该业务功能的代码看起来是下面这样的（请基于注释理解即可）：
+		<image src='../images/unit-test/test-code.png'>
+		</p>
+      </section>
+	  
+	  
+      <footer>
+	  <p><small>QQ:<a href="javascript:void(0)">1010267566</a>
+		Email:<a href="mailto:denghejun@live.cn?subject=About%20Leo's%20Github%20Pages&body=Anything%20you%20want%20to%20say%20here%20...">denghejun@live.cn</a>
+		
+		<br/>Hosted on GitHub Pages <br/>&mdash;<a href="https://denghejun.github.io">leo deng</a></small></p>
+		<p>
+		<small>
+		作者：Leo 
+ <br/>出处：<a href="http://denghejun.github.io">http://denghejun.github.io</a>
+ 本文版权归作者所有<br/>转载请声明作者及来源!
+ </small>
+		</p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+  </body>
+</html>
