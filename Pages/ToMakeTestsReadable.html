@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Denghejun.GitHub.io by denghejun</title>
+    <link rel="stylesheet" href="../stylesheets/styles.css">
+    <link rel="stylesheet" href="../stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="../javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+	  <!-- title here -->
+        <h1>To Make Your Unit Tests Automation And Human Readable</h1>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+        <a href="https://github.com/denghejun" class="button fork"><strong>View On GitHub</strong></a>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+	<nav> 
+        <ul></ul>
+		<a href='../index.html'>Back Home</a>
+      </nav> 
+      <section>
+        <!-- blog content here -->
+		<h2> .NET原生的单元测试</h2>
+		<p>
+		大多数情况之下，我们仅仅是用Moq等组件辅助我们将所有单元测试编写完成，之后，会在代码有修改后，重新run所有的单元测试项目，以检查本次的改动是否影响到相关逻辑。
+		以上方式有多个缺点：
+		</p>
+		<ul>
+			<li>需要进入到源码，利用VS的功能来run（一般做法）</li>
+			<li>也有报表，但是基本都不想看（不知道什么原因）</li>
+			<li>最重要的是，测试集成人员无法参与，完全由开发人员自己来保证，不能将这一环节做到CI（持续集成）中</li>
+		</ul>
+		<p>
+		显然，上述这些缺点与如今正热的TDD、CI都有所违背。它更像是一个封闭的、难以使用的一套单元测试系统，没有办法更多的展开；就像是在一间小黑屋里测试所有的灯泡亮不亮，压抑；而不是只要在敞亮的房间外边按一个按钮，然后就从门缝中塞出一封测试报告，清晰的告诉你里面发生的一切，我知道你可以想象到这个场景。
+		</p>
+		
+		<h2> 从门缝中塞出的测试报告</h2>
+		<p>
+		是的，我需要这样一份报告。前端开发者的技术栈里往往有“构建”这一说，因为他们常常需要严格按照自己的要求来做一些基于任务一样的工作，比如常见的：文件拷贝、压缩、工程编译部署、执行脚本等等；基于Nodejs的有Gulp，但它与.NET并不紧密，说到.NET下最具威力的构建工具，那必然是Cake！这时那些.NET忠实开发者粉丝的福音，因为你可以用熟悉的C#语言写出任何你想要构建的任务流。
+		</p>
+		
+		<p>
+		那么，想要轻松的拿到门缝中塞出的测试报告，我建议.NET开发者们可以研读 Cake 的文档了。Cake中有一些built-in（内建的）API，称之为DSL（Domain Specific Language）,就是说针对Cake这个领域设计的一些API接口，这些API都可以直接使用，诸如文件操作、文件夹操作、压缩等等。且Cake非常勤劳，它集成了很多常见的、优秀的第三方packages，大多数是Nuget和Git上可以获取到的，也就意味着他们都是开源的。
+		</p>
+		<p>
+		Cake的一般性工程文件编写非常简单，熟悉C#的同学很容易上手，像下边是一个build.cake文件的预览：
+		<image src='../images/cake-NUnit/cake-code-sample.png' /></br>
+		说明：</br>
+		<ul>
+			<li>#tool：#号开头的这些代码行称之为directive，预处理指令.</li>
+			<li>使用内建函数Argument所声明的变量是允许传入的参数，就像命令行里的参数一样，大致可以像这样执行这个脚本 `cake.exe -task=Clean`.</li>
+			<li>cake脚本可以引用*.dll，跟普通意义上的reference没什么不同，只是语法是这样的 `#reference ./Utility.dll`</li>
+			<li>cake 脚本的编辑器，官方推荐Visual Studio Code，很好</li>
+		</ul>
+		</p>
+		
+		
+		<h2> Cake 与 单元测试</h2>
+		<p>
+		Cake 其实集成了多种流行的单元测试组件，这里以NUnit为例。非常简单，只有2个步骤：
+		</p>
+		<ul>
+			<li>在你的*.cake文件中引入Package：#tool nuget:?package=NUnit.ConsoleRunner&version=3.4.0，这个是NUnit用来run单元测试的组件</li>
+			<li>传入所有单元测试所在的程序集（*.dll）的路径</li>
+		</ul>
+		<p>
+		执行任意的*.cake文件非常简单，首先你要通过Nuget或任意方式将Cake下载下来，在cmd或power shell中执行类似以下脚本：cake.exe yourBuild.cake -param1=x -param2=y即可，执行完成后你会在执行终端看到类似如下结果（输出非常清晰明了）：
+		<image src='../images/cake-NUnit/cake-tasks.png' /></br>
+		</p>
+		<p>
+		以我事先写好的build.cake为例，里边有4项任务：Clean、Build、Core、Report，其中关于NUnit Runner Console输出的部分如下：
+		<image src='../images/cake-NUnit/nunit-test-runner.png' /></br>
+		显示了所有单元测试的结果。
+		</p>
+		
+		<h2>  单元测试与报表</h2>
+		<p>
+		单元测试在量大的时候，更需要一份统一的、可读的报表将结果清晰简单的呈现出来，以便于快速的追踪问题所在。NUnit默认只会有一个TestResult.xml文件生成，其信息基本与终端看到的一致，不是很方便，于是乎，就有第三方开源组件（NUnitOrange）去解析了这个TestResult.xml，将它转换成了*.html格式。转换之后的格式如下：
+		<image src='../images/cake-NUnit/report-all.png' /></br>
+		<image src='../images/cake-NUnit/report-detail.png' /></br>
+		</p>
+		<p>
+		在本例中，我将报表放在了执行目录下report/{year}/{month}/report-ddHHmmss.html下，以便管理。
+		</p>
+		
+		
+		<h2>Sample</h2>
+		<p>
+		本文所有代码截图均来源自己写的一个一般通用的Cake工程:<a href="https://github.com/denghejun/unitTest-runner.git">unitTest-runner.git</a>
+
+		</p>
+		
+		<p>
+				可预先阅读README.md，以了解更多使用方法。
+		</p>
+		
+      </section>
+	  
+	  
+      <footer>
+	  <p><small>QQ:<a href="javascript:void(0)">1010267566</a>
+		Email:<a href="mailto:denghejun@live.cn?subject=About%20Leo's%20Github%20Pages&body=Anything%20you%20want%20to%20say%20here%20...">denghejun@live.cn</a>
+		
+		<br/>Hosted on GitHub Pages <br/>&mdash;<a href="https://denghejun.github.io">leo deng</a></small></p>
+		<p>
+		<small>
+		作者：Leo 
+ <br/>出处：<a href="http://denghejun.github.io">http://denghejun.github.io</a>
+ 本文版权归作者所有<br/>转载请声明作者及来源!
+ </small>
+		</p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+  </body>
+</html>

@@ -33,7 +33,7 @@
       </nav> 
       <section>
         <!-- blog content here -->
-		<h2>当我们在讨论一个Button逻辑时，我们在谈论什么</h2>
+		<h2> 当我们在讨论一个Button逻辑时，我们在谈论什么</h2>
 		<p>
 		实际上，我们将较复杂的、较长的、较分散的耦合在一起的业务块封装到不同的方法并不是最佳选择，因为 Method始终是过程式的思维，无论你能把方法抽取得多么精准，如果不考虑 Method 的归属，这始终是个问题。
 一切皆对象（everything is object）在ruby这种“纯”面向对象语言中体现的很好，所以转变我们的编程思维极其重要，努力向OOP原则靠拢绝对不会是一件坏事。
@@ -50,7 +50,7 @@
 		</small>
 		
 		
-		<h2>如果是这样</h2>
+		<h2>  如果是这样</h2>
 		<p>
 		不如我们将拥有着全部特性的东西称之为Command吧！确实，拥有上边所有特性对设计者来说并不是一件难事，用OO语言的多态就能搞定。
 如果拥有了Command，且我们强制使用Command来构建我们的业务逻辑，你会惊喜的发现，所有人写的代码都跟你自己写的一样，没有什么维护难度，我一眼就能：
@@ -69,7 +69,7 @@
 我们来一步步初步实现这个Command看看，到底怎么样。
 		</p>
 		
-		<h2>Implement It</h2>
+		<h2>   Implement It</h2>
 		<h3>Command</h3>
 		<p>
 		做一件事情，不需要知道任何信息，也不需要任何反馈
@@ -93,7 +93,7 @@
 		<image src='../images/bizcmd/CommandProxy.png'>
 		</p>
 		
-		<h2>Test It</h2>
+		<h2>    Test It</h2>
 		
 		就常见的 Command<TRequest, TResponse>做一个示例。
 		<p>
@@ -115,7 +115,7 @@
 		<p>
 		</p>
 		
-		<h2>Use It</h2>
+		<h2>     Use It</h2>
 		<p>
 		用CommandProxy使用实现好的Command是这个样子的：
 		<image src='../images/bizcmd/UseCommand.png'>
