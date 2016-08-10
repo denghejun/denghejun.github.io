@@ -1,0 +1,186 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Tenda Router Setting</title>
+  <link rel="stylesheet" href="stylesheets/styles.css"> 
+    <link rel="stylesheet" href="stylesheets/github-dark.css">  
+	<link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
+	<script src="./jquery/dist/jquery.min.js"></script>
+	<script src="./bootstrap/js/bootstrap.min.js"></script>
+    <script src="javascripts/index.js"></script>  
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+	  <!-- title here -->
+        <h1>Tenda Router Setting</h1>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+        <span href="#" class="button fork"><strong>Welcome <span class="label label-success">Daisy</span></strong></span>
+      </div> 
+	  <!-- end banner -->
+
+    <div class="wrapper">
+	<nav> 
+        <ul></ul> 
+      </nav> 
+      <section>
+        <!-- blog content here -->
+	<div class="panel-group" id="accordionmain">
+	
+	<!-- 1. Settings -->
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordionmain" href="#hidden-panel-main">
+				<center>
+				<div id='div_setting'>
+				<image id='img_setting' src='images/setting_small.png'/></br>
+				<button class="btn btn-xs btn-info">setting</button>
+				</div>
+				</center>
+				</a></h4>
+			</div>
+			<div id="hidden-panel-main" class="panel-collapse collapse in">
+				<div class="panel-body">
+				<div class="panel-group" id="accordion-setting">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion-setting" href="#hidden-panel-setting-param"><button class="label label-info">参数设置</button></a></h4>
+						</div>
+						<div id="hidden-panel-setting-param" class="panel-collapse collapse in">
+							<div class="panel-body">
+							<ul class="list-group">
+								<li class="list-group-item"><span class="label label-default">Default</span></li>
+								<li class="list-group-item"><span class="label label-primary">Primary</span></li>
+								<li class="list-group-item"><span class="label label-success">Success</span></li>
+								<li class="list-group-item"><span class="label label-info">Info</span></li>
+								<li class="list-group-item"><span class="label label-warning">Warning</span></li>
+							<ul>
+							</div>
+						</div>
+					</div>
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion-setting" href="#hidden-panel-setting-pwd"><button class="label label-info">密码安全</button></a></h4>
+						</div>
+						<div id="hidden-panel-setting-pwd" class="panel-collapse collapse">
+							<div class="panel-body">
+							<ul class="list-group">
+								<li class="list-group-item"><span class="label label-default">Default</span></li>
+								<li class="list-group-item"><span class="label label-primary">Primary</span></li>
+								<li class="list-group-item"><span class="label label-success">Success</span></li>
+								<li class="list-group-item"><span class="label label-info">Info</span></li>
+								<li class="list-group-item"><span class="label label-warning">Warning</span></li>
+							<ul>
+							</div>
+						</div>
+					</div>
+			   </div>
+			</div>
+			</div>
+		</div>
+
+		<!-- 2. Wifi -->
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordionmain" href="#hidden-panel-wifi">
+				<center>
+				<div id='div_wifi'>
+				<image id='img_wifi' src='images/wifi_small.png'/>
+				</br>
+			
+				<button class="btn btn-xs btn-success">Wifi</button>
+				
+				</div>
+				</center>
+				</a></h4>
+			</div>
+			<div id="hidden-panel-wifi" class="panel-collapse collapse">
+				<div class="panel-body">no wifi yet.</div>
+			</div>
+		</div>
+		
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordionmain" href="#hidden-panel-account">
+				<center>
+				<div id='div_account'>
+				<image id='img_account' src='images/account_small.png'/>
+				</br>
+				</br>
+				<button class="btn btn-xs btn-primary">Account</button>
+				</div>
+				</center>
+				</a></h4>
+			</div>
+			<div id="hidden-panel-account" class="panel-collapse collapse">
+				<div class="panel-body">no Account yet.</div>
+			</div>
+		</div>
+		
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordionmain" href="#hidden-panel-search">
+				<center>
+				<div id='div_search'>
+				<image id='img_search' src='images/search_small.png'/>
+				</br>
+				</br>
+				<button class="btn btn-xs btn-warning">Search</button>
+				</div>
+				</center>
+				</a></h4>
+			</div>
+			<div id="hidden-panel-search" class="panel-collapse collapse">
+				<div class="panel-body">no search yet.</div>
+			</div>
+		</div>
+		
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordionmain" href="#hidden-panel-Help">
+				<center>
+				<div id='div_help'>
+				<image id='img_help' src='images/help_small.png'/>
+				</br>
+				</br>
+				<button class="btn btn-xs btn-danger">Help</button>
+				</div>
+				</center>
+				</a></h4>
+			</div>
+			<div id="hidden-panel-Help" class="panel-collapse collapse">
+				<div class="panel-body">no content yet.</div>
+			</div>
+		</div>
+	</div>
+
+      </section>
+	  
+	  
+      <footer>
+	  <small>公司地址:<a href="javascript:void(0)">深圳市南山区中山园路1001号国际E城腾达科技大厦</a><br/>
+		Email:<a href="mailto:tenda@tenda.com.cn?subject=About%20Tenda's%20Router%20Pages&body=Anything%20you%20want%20to%20say%20here%20...">tenda@tenda.com.cn</a>
+		<br/>
+		 </small>
+		
+		<small>官网：<a href="http://www.tenda.com.cn/">http://www.tenda.com.cn/</a><br/>
+		作者：Daisy <br/>
+ 本文版权归作者所有<br/>转载请声明作者及来源!
+ </small>
+		
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+  </body>
+</html>
