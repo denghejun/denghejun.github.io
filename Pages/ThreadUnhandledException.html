@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Denghejun.GitHub.io by denghejun</title>
+    <link rel="stylesheet" href="../stylesheets/styles.css">
+    <link rel="stylesheet" href="../stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="../javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+	  <!-- title here -->
+        <h1>About .Net System.Threading.Tasks UnHandled Exception</h1>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+        <a href="https://github.com/denghejun" class="button fork"><strong>View On GitHub</strong></a>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+	<nav> 
+        <ul></ul>
+		<a href='../index.html'>Back Home</a>
+      </nav> 
+      <section>
+        <!-- blog content here -->
+		<h2>最初对线程异常的盲点 </h2>
+		<p>
+		不得惭愧的说，之前我一直认为多线程中线程的未处理异常对程序 Main Thread 毫无影响。我觉得我之所以有这样的认识有以下几个原因（不是找借口哈）：
+		</p>
+		<ul>
+			<li>不同版本的.NET Framework 对线程未处理异常的默认表现不一致</li>
+			<li>同一.NET Framewoek版本下，不同多线程API对未处理异常的表现不一致</li>
+		</ul>
+		<p>
+		如果不去究其原因，就只能想微软常说的那样“it was not a problem, that was by design.”, 但确实，有些东西预先就是这么设计的。
+		</p>
+		
+		
+		
+		<h2>常见异步处理代码片段  </h2>
+		<p>
+		<h4>It works Bad！</h4>
+		<image src='../images/un-ex/bad.png' />
+		<h4>It works Good！</h4>
+		<image src='../images/un-ex/good.png' />
+		</p>
+		<p>
+		但如果你以为记住这些API的表现就行了，在以后的使用中就不会有什么问题了，那就太天真了，举个栗子：上边那些works good的API在不同版本.NET Framework下任有不同的表现。
+		</p>
+		
+		
+		
+		<h2>特殊的"By Design"   </h2>
+		微软对此有几个特殊的“By Design”，对于那些由Task.Factory.StartNew等相关方式创建的线程所抛出的UnhandledException，需要特别注意：
+		<ul>
+			<li>在.NET 4.0 fromwork中，默认会终止应用程序</li>
+			<li>在.NET 4.5或更高版本中，默认不会终止应用程序，程序将会正常运行，但也可以通过如下配置还原到.NET 4.0的默认行为：
+			<image src='../images/un-ex/cfg.png'/>
+			</li>
+			<li>即使程序Build Target .Net Version是4.0的，如果安装有高于4.0版本的framework，但程序依然会运行在高版本的framework上，所以程序依然正常运行</li>
+		</ul>
+		
+		<p>
+		所以，在那些只装有.NET framework 4.0的机器上，我们的WCF Server在GC回收时，若发现有未处理的线程异常，则会终止应用程序。
+		</p>
+		
+		<p>
+		以上，我都全部验证过，的确如此，之前一直没注意这个，知道有一天用户抛给我一个bug.但如果.NET Framework一直保持Update，那么，这将不会是一个问题。
+		</p>
+		
+		<h2>后记    </h2>
+		<p>
+		所以，只要涉及到多线程，就会增加程序的复杂度，就算你做好了多线程资源同步等等常规性的问题，总避免不了出现一些隐式的问题，直到发现它那天为止。
+		</p>
+		<p>
+		但也不是无法完全避免，比如只要涉及到有新的线程开销了，是否需要特别关注，线程内部的异常要怎么处理，如果做好了这样的“内聚”工作，相信线程间、模块间的依赖也就消失了，那么，自然问题也就少了。
+		</p>
+      </section>
+	  
+	  
+      <footer>
+	  <p><small>QQ:<a href="javascript:void(0)">1010267566</a>
+		Email:<a href="mailto:denghejun@live.cn?subject=About%20Leo's%20Github%20Pages&body=Anything%20you%20want%20to%20say%20here%20...">denghejun@live.cn</a>
+		
+		<br/>Hosted on GitHub Pages <br/>&mdash;<a href="https://denghejun.github.io">leo deng</a></small></p>
+		<p>
+		<small>
+		作者：Leo 
+ <br/>出处：<a href="http://denghejun.github.io">http://denghejun.github.io</a>
+ 本文版权归作者所有<br/>转载请声明作者及来源!
+ </small>
+		</p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+  </body>
+</html>
