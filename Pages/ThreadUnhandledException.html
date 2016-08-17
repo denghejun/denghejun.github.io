@@ -76,6 +76,11 @@
 		
 		<p>
 		以上，我都全部验证过，的确如此，之前一直没注意这个，直到有一天用户抛给我一个bug.但如果.NET Framework一直保持Update，那么，这将不会是一个问题。
+		<image src='../images/un-ex/bug.png' />
+		</p>
+		<p>
+		那么，如果我们想要在一个地方，统一处理所有的Unhandled Exception，如何做呢？<br/>我们可以订阅TaskScheduler.UnobservedTaskException全局事件，该事件即可作为那些未处理异常的Handler，标记异常已被处理以改变.NET 4.0的默认行为（terminates the process）.
+		<image src='../images/un-ex/sln.png' />
 		</p>
 		
 		<h2>后记    </h2>
