@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Let us Chat In Console</title>
+	<link rel="shortcut icon" type="image/x-icon" href="../images/logo.ico" />
+    <link rel="stylesheet" href="../stylesheets/styles.css">
+    <link rel="stylesheet" href="../stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="../javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+	  <!-- title here -->
+        <h1>Let us Chat In Console</h1>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+        <a href="https://github.com/denghejun" class="button fork"><strong>View On GitHub</strong></a>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+	<nav> 
+        <ul></ul>
+		<a href='../index.html'>Back Home</a>
+      </nav> 
+      <section>
+        <!-- blog content here -->
+		<h2>关于 Node.js </h2>
+		<p>
+		较为准确的解释，Node是一个javascript的运行时。所有基于Node的应用程序，你的Javascript代码将会由Node RunTime解释并执行。这也让JavaScript大量应用到后端系统成为了可能。
+		</p>
+		<p>
+		Node是基于事件驱动设计，但区别于大多数同样是事件驱动设计的系统而言，它是异步事件驱动，是非阻塞的；而大部分事件驱动设计都是阻塞的。所谓阻塞在Node中即是指在程序运行过程中遇到了non-JavaScript的操作，而Node进程不得不持续等待该操作的完成，从中不难看出，Node依然是不擅长CPU密集型的计算操作，这与大多数其他语言运行时一样，CPU密集型运算只能依赖你的程序的多线程设计和服务器硬件（如CPU数量）要求等。
+		</p>
+		<p>
+		异步事件驱动非常有利于开发出高性能的网络应用程序、静态资源服务器，这时异步事件所擅长的。幸好，对于我们现在大多数的系统来讲，都具备以下一些特征：
+		</p>
+		<ul>
+			<li>1.有大量的网络连接请求</li>
+			<li>2.几乎所有的请求需要频繁的DB、文件I/O操作</li>
+		</ul>
+		<p>
+		在Node中所有的I/O API读提供有异步的版本，且支持以callback的方式编写你的代码。相比于原始的Thread-Base的方式来讲，它是一个称职的设计，相反后者则是一个难以使用、不称职的设计。
+		</p>
+		
+	
+
+	
+		<h2>设计基于 Node 的 Chat Console  </h2>
+		<p>
+		首先，Chat Server应该是一个C/S的架构。Server端监听某端口的网络请求，并负责转发数据；Client发起连接请求，并发送数据。为了程序的简单化，也为了熟悉Node中关于网络的原始部分，我决定引用'net'模块实现一个这样的demo：
+		</p>
+		<ul>
+			<li>1.server端只负责监听端口，接受连接</li>
+			<li>2.将Server端创建的Socket分发到子进程中处理，子进程负责转发数据，保持各个cient的连接</li>
+			<li>3.client启动后自动连接到Server，并得到连接成功的提示，之后方可发送文本消息和图片</li>
+			<li>4.某一client发送的数据，将同时转发给所有"在线"的client</li>
+			<li>5.Client界面能够清晰的看到来自不同client发送的消息</li>
+		</ul>
+		
+		
+		
+		
+		
+		
+		<h2>Server   </h2>
+		<p>
+		Server端的设计比较简洁，也是因为它负责的只是保持连接和转发数据。server端的程序结构如下：
+		</p>
+		
+		<ul>
+		<li><image src='../images/console-chat/server-struc.png'/></li>
+			<li>./core/bootstrapper: 负责引导Server启动。</li>
+			<li>./core/child_process: 子进程负责处理到来的每个Socket。</li>
+			<li>./core/server-context: server启动时的上下文信息。</li>
+			<li>./server: server端启动模块。<br/>
+			<image src='../images/console-chat/server-start.png'/>
+			</li>
+		</ul>
+		
+		
+		
+		
+		<h2>Client    </h2>
+		<p>
+		Client端有以下几个主要职责：
+		</p>
+		<ul>
+			<li>1.支持发送两种形式的消息图片和文本</li>
+			<li>2.接收两种形式的消息，并缓存图片到本地，并显示图片（该功能不够完善）</li>
+			<li>3.控制用户输入流程和界面效果呈现</li>
+		</ul>
+		<p>其程序结构如下：</p>
+		
+		<ul>
+		<li><image src='../images/console-chat/client-struc.png' /></li>
+			<li>./core/bootstrapper: 负责引导客户端初始化并连接到服务端</li>
+			<li>./core/client-processor: 创建新客户端模块</li>
+			<li>./core/message-processor: 消息发送和接收处理模块</li>
+			<li>./start: client端启动模块<br/>
+			<image src='../images/console-chat/client-start.png' />
+			</li>
+		</ul>
+		
+		
+		<h2>基于TCP/IP协议的数据格式     </h2>
+		<p>
+		基于TCP/IP协议的数据是以Stream的形式发送的，是8位（bit）字节（byte）数组（ Uint8Array ），在Nodejs中Buffer既是它的另一实现，而Buffer或纯文本是底层网络发送消息的2种格式。
+		</p>
+		<ul>
+			<li>如果我们要申请分配一个无符号32位整数的Buffer（也就是4个字节（byte））<br/>
+			<image src='../images/console-chat/buffer-alloc.png'/>
+			</li>
+			<li>当我们接收到这样一个字节数组时，可以采取以下方式读出其中的值<br/>
+			<image src='../images/console-chat/buffer-read.png'/>
+			</li>
+			<li>申请固定长度的Buffer并初始化<br/>
+			<image src='../images/console-chat/buffer-alloc-fix.png'/>
+			</li>
+			<li>将多个Buffer拼接成一个Buffer<br/>
+			<image src='../images/console-chat/buffer-total.png'/>
+			</li>
+			<li>
+			分段读取Buffer中的各种数据<br/>
+			<image src='../images/console-chat/buffer-split-read.png'/>
+			</li>
+		</ul>
+		<p>
+		实际上当我们发送数据Buffer太大时，Client端会分多次接收数据，尤其是在那些保持长连接的Socket原生应用中。那么基于字节数据的使用我们可以定义出自己的一套消息协议[Type-Length-Value]，分别代表消息的类型、消息的长度（即Value的长度）、消息体。这三个元素全部为Buffer类型，将Buffer.concat([type,length,value])拼接到一起，作为一个格式化的封包发送出去。
+		</p>
+		<p>
+		这样，接收端在第一次收到消息时，将会首先得到type,length的部分，且这2部分各自都是定长的，比如Type长度为6，Length长度为4.那么我们可以分段读取这2个Buffer。然后根据Length的值可以计算在哪一次本批数据接收完成。然后把每次接收到的chunk给拼接起来，就是一段完整的Buffer，接下来就可以完全的读取Buffer中的内容了。
+		</p>
+		<p>
+		在本文描述的console chat中，即是使用了这种自定义消息协议。
+		</p>
+		
+		
+		
+		
+		<h2>运行效果      </h2>
+		<ul>
+			<li>启动server<br/>
+			<image src='../images/console-chat/server-pic.png'/>
+			</li>
+			<li>多Client发送消息<br/>
+			<image src='../images/console-chat/multi-clients.png'/>
+			</li>
+		</ul>
+		
+		
+      </section>
+	  
+	  
+      <footer>
+	  <p><small>QQ:<a href="javascript:void(0)">1010267566</a>
+		Email:<a href="mailto:denghejun@live.cn?subject=About%20Leo's%20Github%20Pages&body=Anything%20you%20want%20to%20say%20here%20...">denghejun@live.cn</a>
+		
+		<br/>Hosted on GitHub Pages <br/>&mdash;<a href="https://denghejun.github.io">leo deng</a></small></p>
+		<p>
+		<small>
+		作者：Leo 
+ <br/>出处：<a href="http://denghejun.github.io">http://denghejun.github.io</a>
+ 本文版权归作者所有<br/>转载请声明作者及来源!
+ </small>
+		</p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+  </body>
+</html>
