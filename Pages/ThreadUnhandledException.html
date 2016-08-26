@@ -65,7 +65,7 @@
 		微软对此有几个特殊的“By Design”，对于那些由Task.Factory.StartNew等相关方式创建的线程所抛出的UnhandledException，需要特别注意：
 		<ul>
 			<li>在.NET 4.0 fromwork中，默认会终止应用程序</li>
-			<li>在.NET 4.5或更高版本中，默认不会终止应用程序，程序将会正常运行，但也可以通过如下配置还原到.NET 4.0的默认行为：
+			<li>在.NET 4.5或更高版本中，默认不会终止应用程序，程序将会正常运行，但也可以通过如下配置还原到.NET 4.0的默认行为（需要在确保线程执行完成后，显示调用 GC.Collect()才会crash）：
 			<image src='../images/un-ex/cfg.png'/>
 			</li>
 			<li>即使程序Build Target .Net Version是4.0的，如果安装有高于4.0版本的framework，但程序依然会运行在高版本的framework上，所以程序依然正常运行</li>
