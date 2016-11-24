@@ -1,0 +1,255 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Tips Maybe You Need</title>
+	<link rel="shortcut icon" type="image/x-icon" href="../images/logo.ico" />
+    <link rel="stylesheet" href="../stylesheets/styles.css">
+    <link rel="stylesheet" href="../stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="../javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+	  <!-- title here -->
+        <h1>Tips Maybe You Need</h1>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+        <a href="https://github.com/denghejun" class="button fork"><strong>View On GitHub</strong></a>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+	<nav> 
+        <ul></ul>
+		<a href='../index.html'>Back Home</a>
+      </nav> 
+      <section>
+        <!-- blog content here -->
+		<h2>Git (bash) </h2>
+		<h4>当本地误删除了某文件时</h4>
+		<ul>
+			<li>单个文件 git checkout App1/a.php</li>
+			<li>当前目录所有文件 git checkout .</li>
+		</ul>
+		<h4>Undo操作</h4>
+		<ul>
+			<li>还未执行(git add .)的新增文件操作Undo：git clean -fdx (注意：修改文件和删除文件将不会被undo)</li>
+			<li>执行了(git add .或git commit)的所有操作（增/删/改）的Undo：
+				<ul>
+				<li>undo到本地前一次commit的结果(只能一次有效)：git reset --hard</li>
+				<li>undo到本地指定一次commit的结果：git reset --hard HEAD~index（注：index是commit数组的索引,所以是从0开始的，比如HEAD~0指的是最后一次的commit；HEAD~1是倒数第二次的commit；）</li>
+				<li>undo到Server端最后一次commit的结果：git reset --hard @{u}（注：此命令执行时，有可能Server端已经被其他人push过了，但它不会主动undo到最新的版本，所以，理论上讲，该命令会undo到本地最后一次成功push的版本，这个原理其实跟大多数源码管理工具如：svn、VSTS等是一样的，undo操作并不等价于undo + git newest。）</li>
+				</ul>
+			</li>
+			<li>所以，一般情况下若为了确保完全undo所有操作，需要连续执行以下2条cmd：git clean -fdx | git reset --hard @{u}.就可以恢复到git服务器版本。</li>
+		</ul>
+		<h4>check out</h4>
+		<ul>
+			<li>切换到一个已经存在的分支: git checkout your-branch-name</li>
+			<li>创建一个不存在的分支并切换到该分支: git chekout -b your-branch-name</li>
+			<li><p>分支重命名：</p>
+				
+				<pre><code><xmp>
+# Rename branch locally
+git branch -m old_branch new_branch
+
+# Delete the old branch
+git push origin :old_branch
+					
+# Push the new branch, set local branch to track the new remote
+git push --set-upstream origin new_branch </xmp>
+				</code></pre> 
+			</li>
+			
+		</ul>
+		
+		<h4>push & pull</h4>
+		<ul>
+			<li>当执行push推送时，若发现server端的文件与本地不是最新的时，将会push失败，此时执行：git pull拉取最新的server端版本后方可成功。</li>
+			<li>如果git commit了多次，但是都还没有push，这时输入：git push即可全部push，而使用git push origin master则报错。</li>
+			<li>有一次我git的密码修改了，我是执行这个命令：git config --global credential.helper，之后，就会在push时，重新输入密码了</li>
+		</ul>
+		
+		<h4>auto complete</h4>
+		<ul>
+			<li>在terminal中当输入不完整的名词时，按下Tab键，将会自动补全；最长用的场景就是操作那些较长的分支名称。</li>
+		</ul>
+		
+		
+		<h2>NuGet</h2>
+		<h4>proxy setting</h4>
+		<ul>
+			<li>当你所处的开发环境需要用代理上网时，需要设置代理，Nuget才能正常Restore一些Package，打开 %appdata%\NuGet(一般类似C:\Users\ld71\AppData\Roaming\NuGet，%appdata%是环境变量，指向Users{userName}\AppData\Roaming),添加以下设置(具体值按需设置)：
+			<pre><code><xmp>
+<configuration>
+     <config>
+        <add key="http_proxy" value="http://my.proxy.address:port" />
+        <add key="http_proxy.user" value="mydomain\myUserName" />
+        <add key="http_proxy.password" 
+		value="base64encodedHopefullyEncryptedPassword" />
+     </config>
+</configuration></xmp>
+				</code></pre> 
+			</li>
+		</ul>
+		
+		<h4>pack package</h4>
+		打包并上传一个.csproj的Nuget包分四步（在.csproj文件目录下进行）
+		<ul>
+			<li>nuget spec: 生成xxx.nuspec文件(这一步一般意义只需执行一次，之后就修改些内容就可以了，比如ReleaseNotes)</li>
+			<li>修改xxx.nuspec文件中的必要信息，如Author、ReleaseNotes等，版本号在Pack会自动替换</li>
+			<li>nuget pack xxx.csproj -IncludeReferencedProjects： 生成xxx.1.0.0.x.nupkg文件；-IncludeReferencedProjects参数指示包含该项目所有 的依赖项目（比如xxx.csproj依赖了yyy.dll，package在上传时会包含它），但一般若我们的项目对外的依赖都通过Nueget来管理，所以这个参数基本不会使 用，Nuget会在Install时自动解析依赖。除非我们有本地的dll，而又不能或不想使用Nuget来管理的话就适用该参数。</li>
+			<li>nuget push xxx.1.0.0.x.nupkg -s "http://10.16.76.251:9999/NugetServer/" "your-api-key": push Package;这里的"your-api-key"，可以通过以下命令设置
+			<pre>
+			<code>
+<xmp>
+nuget setApiKey <API Key> -Source <Server URL>
+</xmp>
+			</code>
+			</pre>
+			</li>
+		</ul>
+		<h4>pack files</h4>
+		<p>
+		一般来讲，若上传的Package依赖使用方的一些配置文件（如app.config且只应该包含仅需的部分，在Install Package时若文件已存在会自动合并）则需要将文件名后追加.transform（如app.config.transform），然后在.nuspec文件中添加对应files节点(注意：是直接在<package>节点下)：
+		</p>
+		<ul>
+			<li>
+		    <pre>
+			<code>
+<xmp>
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <files>
+     <!--src: 文件在当前项目的相对位置；-->
+     <!--target: 文件在打包好的Package内的相对位置(Package Install时会将'content'文件夹下的所有目录和文件直接Install到目标项目)-->
+     <file src="Configuration\Database.config.transform" target="content\Configuration\" />
+    <file src="Configuration\App.config.transform" target="content\" />
+  </files>
+</package>
+</xmp>
+			</code>
+			</pre>
+			</li>
+		</ul>
+		
+		
+		
+		<h2>VS Code</h2>
+		<h4>switch project</h4>
+		<ul>
+			<li>为了让程序编写时智能感知能够正常（比如按下Ctrl+.后能够提示using），或调试时监控变量更详细，最好将Current Project切换到你工作的项目下，有2种方式
+			<ul>
+			<li>Ctrl+Shift+P，然后输入select project，回车后即可看到root目录下所有的projects（project.json）</li>
+			<li>在编辑器的右下角，有一个火焰一样的图标，点击它即可切换</li>
+		</ul>
+			</li>
+		</ul>
+		
+		<h4>debug</h4>
+		<ul>
+			<li>.NET Core项目，当需要调式程序时，设置launch.json文件，如下(program属性指向了需要调试的程序)：
+			<pre>
+	<code>
+	<xmp>
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core Launch (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceRoot}/implement/bin/Debug/netcoreapp1.0/win10-x64/implement.dll",
+            "args": [],
+            "cwd": "${workspaceRoot}",
+            "externalConsole": false,
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command.pickProcess}"
+        }
+    ]
+}
+	</xmp>
+	</code>
+</pre>
+			</li>
+			<li>调试程序启动前，一般需要执行build task，若需要调试的project(project.json)不在${workspaceRoot}目录下，则需按以下形式在task.json文件中指定：
+			<pre>
+	<code>
+	<xmp>
+{
+    "version": "0.1.0",
+    "command": "dotnet",
+    "isShellCommand": true,
+    "args": [],
+    "tasks": [
+        {
+            "taskName": "build",
+            "args": [
+                "${workspaceRoot}/implement"
+            ],
+            "isBuildCommand": true,
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
+	</xmp>
+	</code>
+</pre>
+			</li>
+		</ul>
+		
+		
+		
+		
+		<h2>C#</h2>
+		<h4>stop abstract/virtual</h4>
+		C#中的sealed关键字有两种用途
+		<ul>
+			<li>用于class，将类密封，将不可被继承；</li>
+			<li>用于abstract/virtual的Method，该方法将会在当前实现类中override后，终止可重载/写的特性。</li>
+		</ul>
+		
+		
+		
+		 <div style="text-align:center;display:block;">
+		 <div style="border-top:1px dashed #cccccc;height: 1px;overflow:hidden;margin:10px;"></div>
+ <image height="120px" width="120px" src="../images/payme.png" />
+ <h4 style="color:orange;font-weight:bold">(打赏)</h4>
+ <h3 style="color:red;font-weight:bold">If you want to pay for this</br>I will list your account name here.</br> HA HA!</h3>
+ </div>
+      </section>
+	  
+	  
+      <footer>
+	  <p><small>QQ:<a href="javascript:void(0)">1010267566</a>
+		Email:<a href="mailto:denghejun@live.cn?subject=About%20Leo's%20Github%20Pages&body=Anything%20you%20want%20to%20say%20here%20...">denghejun@live.cn</a>
+		
+		<br/>Hosted on GitHub Pages <br/>&mdash;<a href="https://denghejun.github.io">leo deng</a></small></p>
+		<p>
+		<small>
+		作者：Leo 
+ <br/>出处：<a href="http://denghejun.github.io">http://denghejun.github.io</a>
+ 本文版权归作者所有<br/>转载请声明作者及来源!
+ </small>
+		</p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+  </body>
+</html>
