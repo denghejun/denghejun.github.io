@@ -226,7 +226,7 @@ nuget setApiKey <API Key> -Source <Server URL>
 		</ul>
 		<h4>WCF FaultException VS Exception</h4>
 		<ul>
-			<li>FaultException 是微软针对标准的SOAP协议定义的结构，基于标准的WSDL而言，你应该总是使用FaultException/FaultException<TFaultContract>来告知Web中的任意Client发生故障的原因；其生成的WSDL是统一的XML（SOAP）格式。</li>
+			<li>FaultException 是微软针对标准的SOAP协议定义的结构，基于标准的WSDL而言，你应该总是使用FaultException/FaultException&#60;TFaultContract&#62;来告知Web中的任意Client发生故障的原因；其生成的WSDL是统一的XML（SOAP）格式。</li>
 			<li>Exception 是微软.NET自定义的异常类，其序列化的结果并不满足标准的SOAP格式，所以若你的WCF 服务抛出一个Type是Exception的异常，非.NET Client将可能不会正确得到异常。</li>
 			<li>若是仅在.NET范围内提供WCF服务，我认为这两者将没有任何太大区别，包括性能方面。</li>
 		</ul>
