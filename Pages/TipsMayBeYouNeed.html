@@ -84,6 +84,26 @@ git push --set-upstream origin new_branch </xmp>
 			<li>在terminal中当输入不完整的名词时，按下Tab键，将会自动补全；最长用的场景就是操作那些较长的分支名称。</li>
 		</ul>
 		
+			<h4>merge</h4>
+		<ul>
+			<li>以下命令执行Merge动作
+			<pre><code>
+git checkout master
+git merge --no-ff YourBranchNameNeedToMerge
+			</code></pre>
+			</li>
+			<li>
+			之后，会要求输入一个 merge commit message：
+		
+			<pre><code>
+1. 按下"i"键进入"insert"模式
+2. 输入commit message之后，按"q"退出输入模式
+3. 直接输入":wq"保存并退出，完成commit
+			</code></pre>
+			
+			<li/>
+		</ul>
+		
 		
 		<h2>NuGet</h2>
 		<h4>proxy setting</h4>
