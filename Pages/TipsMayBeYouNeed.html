@@ -262,6 +262,44 @@ nuget setApiKey <API Key> -Source <Server URL>
 			<li>更多请参考：<a target='_blank' href='http://docs.servicestack.net/'>Service Stack Docs</a></li>
 		</ul>
 		
+		<h2>SQL Server</h2>
+		<h4>嵌套事务快速模板</h4>
+		<pre><code><xmp>
+DECLARE @TranCounter INT;
+SET @TranCounter = @@TRANCOUNT;
+IF @TranCounter > 0
+    SAVE TRANSACTION ProcedureSave;
+ELSE
+    BEGIN TRANSACTION;
+BEGIN TRY
+
+-- your code here
+
+
+IF @TranCounter = 0
+        COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+IF @TranCounter = 0
+        ROLLBACK TRANSACTION;
+    ELSE
+        IF XACT_STATE() <> -1
+            ROLLBACK TRANSACTION ProcedureSave;
+    DECLARE @ErrorMessage NVARCHAR(4000);
+    DECLARE @ErrorSeverity INT;
+    DECLARE @ErrorState INT;
+
+    SELECT @ErrorMessage = ERROR_MESSAGE();
+    SELECT @ErrorSeverity = ERROR_SEVERITY();
+    SELECT @ErrorState = ERROR_STATE();
+
+    RAISERROR (@ErrorMessage, -- Message text.
+               @ErrorSeverity, -- Severity.
+               @ErrorState -- State.
+               );
+END CATCH
+		</xmp></code></pre>
+		
 		 <div style="text-align:center;display:block;">
 		 <div style="border-top:1px dashed #cccccc;height: 1px;overflow:hidden;margin:10px;"></div>
  <image height="120px" width="120px" src="../images/payme.png" />
