@@ -1,0 +1,454 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>.NET Cache Research</title>
+	<link rel="shortcut icon" type="image/x-icon" href="../images/logo.ico" />
+    <link rel="stylesheet" href="../stylesheets/styles.css">
+    <link rel="stylesheet" href="../stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="../javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+	  <!-- title here -->
+        <h1>.NET Cache Research</h1>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+        <a href="https://github.com/denghejun/dotNET-caches" class="button fork"><strong>View On GitHub</strong></a>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+	<nav> 
+        <ul></ul>
+		<a href='../index.html'>Back Home</a>
+      </nav> 
+      <section>
+        <!-- blog content here -->
+		<h2>What's this </h2>
+		<p>
+		一个对.NET平台下缓存解决方案的探索关于:
+		</p>
+		<ul>
+			<li>MemoryCache: .NET自定义的内存缓存实现。</li>
+			<li>CacheManager：一个开源的.NET内存缓存实现。</li>
+		</ul>
+		
+		
+		<h2>Microsoft MemoryCache  </h2>
+		<ul>
+			<li>MemoryCache是.NET唯一实现了ObjectCache的类，可以使用它来在内存中缓存任意类型对象。</li>
+			<li>MemoryCache.Default是默认的MemoryCache实例，.NET建议使用它而不是创建任意多个缓存对象。</li>
+		</ul>
+		<h4>Add Cache</h4>
+		<p>
+		Add方法会在已存在相同Key的缓存时返回false，所以不会重复添加。
+		</p>
+		
+		<pre><code><xmp>
+MemoryCache.Default.Add(Warehouse.CACHE_KEY, Warehouse.Warehouses, DateTimeOffset.Now.AddSeconds(2));
+var warehousesFromCache = MemoryCache.Default.Get(Warehouse.CACHE_KEY) as List<Warehouse>;
+Assert.That(warehousesFromCache, Is.Not.Null);
+Assert.That(warehousesFromCache.Count, Is.EqualTo(2));
+		</xmp></code></pre>
+		
+		<h4>Add Or Get Existing</h4>
+		<p>
+		返回新添加或已存在相同Key的缓存Value。
+		</p>
+		<pre><code><xmp>
+MemoryCache.Default.Add(Warehouse.CACHE_KEY, Warehouse.Warehouses, MemoryCache.InfiniteAbsoluteExpiration);
+var caches = MemoryCache.Default.AddOrGetExisting(Warehouse.CACHE_KEY, Warehouse.Warehouses.Where(o => o.WarehouseNumber == "07").ToList(), MemoryCache.InfiniteAbsoluteExpiration) as List<Warehouse>;
+Assert.That(caches.Count, Is.Not.EqualTo(1));
+Assert.That(caches.Count, Is.EqualTo(2));
+		</xmp></code></pre>
+		
+		<h4>Update Cache</h4>
+		<p>
+		更新（替换）缓存。
+		</p>
+		<pre><code><xmp>
+MemoryCache.Default.Add(Warehouse.CACHE_KEY, Warehouse.Warehouses, MemoryCache.InfiniteAbsoluteExpiration);
+var specialWarehouse = Warehouse.Warehouses.Where(o => o.WarehouseNumber == "07").ToList();
+MemoryCache.Default.Set(Warehouse.CACHE_KEY, specialWarehouse, MemoryCache.InfiniteAbsoluteExpiration);
+var caches = MemoryCache.Default.Get(Warehouse.CACHE_KEY) as List<Warehouse>;
+Assert.That(caches, Is.Not.Null);
+Assert.That(caches.Count, Is.EqualTo(1));
+Assert.That(caches[0].WarehouseNumber == "07");
+		</xmp></code></pre>
+		
+		<h4>Cache Expire</h4>
+		<p>
+		有两种缓存过期策略：
+		</p>
+		<ul>
+			<li>AbsoluteExpiration：绝对时间过期。在指定的时间间隔后过期，缓存移除、丢失。</li>
+			<li>SlidingExpiration：滑动时间过期。在指定的时间间隔后若未命中过该缓存，则移除、丢失；否则，则顺延指定的时间间隔，缓存不移除。</li>
+		</ul>
+		<pre><code><xmp>
+MemoryCache.Default.Add(Warehouse.CACHE_KEY+"1", Warehouse.Warehouses, DateTimeOffset.Now.AddSeconds(2));
+Thread.Sleep(2000);
+var warehousesFromCache = MemoryCache.Default.Get(Warehouse.CACHE_KEY+"1") as List<Warehouse>;
+Assert.That(warehousesFromCache, Is.Null);
+		</xmp></code></pre>
+		
+		<h4>Cache Refresh</h4>
+		<p>
+		当Cache丢失前，MemoryCache会回掉一个Callback委托进行通知，此时，为了让应用程序没有该缓存真空期，我们应该立即刷新缓存，保持最新的同时防止客户端出现缓存未命中（缓存丢失）的现象发生。
+		</p>
+		<pre><code><xmp>
+[Test]
+public void CacheShouldRefreshSuccessAfterExpired()
+{
+    MemoryCache.Default.Set(Warehouse.CACHE_KEY, Warehouse.Warehouses, new CacheItemPolicy()
+    {
+        AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(2),
+        UpdateCallback = this.CacheRefreshCallback
+    });
+
+    Thread.Sleep(5000);
+    var warehousesFromCache = MemoryCache.Default.Get(Warehouse.CACHE_KEY) as List<Warehouse>;
+    Assert.That(warehousesFromCache, Is.Not.Null);
+}
+
+private void CacheRefreshCallback(CacheEntryUpdateArguments args)
+{
+    var cacheItem = MemoryCache.Default.GetCacheItem(args.Key);
+    var cacheObj = cacheItem.Value;
+
+    cacheItem.Value = cacheObj;
+    args.UpdatedCacheItem = cacheItem;
+    var policy = new CacheItemPolicy
+    {
+        UpdateCallback = new CacheEntryUpdateCallback(CacheRefreshCallback),
+        AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(2)
+    };
+
+    args.UpdatedCacheItemPolicy = policy;
+}
+		</xmp></code></pre>
+		
+		<h4>Cache Config File</h4>
+		<p>
+		在需要缓存文件内容时适用；且当文件内容更改时自动刷新缓存。
+		</p>
+		<pre><code><xmp>
+var configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "warehouse.txt");
+var contents = MemoryCache.Default.Get("WarehouseConfig");
+if (contents == null)
+{
+    var policy = new CacheItemPolicy()
+    {
+        AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(30),
+    };
+
+    policy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string>() { configFilePath }));
+    MemoryCache.Default.Set("WarehouseConfig", File.ReadAllText(configFilePath), policy);
+}
+
+Thread.Sleep(5000);
+var contentsFromCache = MemoryCache.Default.Get("WarehouseConfig");
+Assert.That(contentsFromCache, Is.Not.Null);
+Assert.That(contentsFromCache, Is.EqualTo("01,02,03"));
+		</xmp></code></pre>
+		
+		
+		
+		
+		
+		
+		
+		<h2>Open Source CacheManager   </h2>
+		<p>
+		CacheManager是GitHub上一个开源的专注于.NET Cache领域项目，其有许多新的思想和概念是.NET MemoryCache所不具备的；相对于MemoryCache，其有以下特有feature：
+		</p>
+		<ul>
+			<li>代码实现、写法上更符合现如今的可读性、连续性的友好风格</li>
+			<li>缓存抽象出Layer的概念，同一份缓存数据可以同时缓存到多个Layer（CacheManager称之为'Handle'）上，有利于防止某Layer缓存意外丢失，降低客户端缓存未命中的概率，其中DictionaryHandle性能最好</li>
+			<li>每层可单独定义过期策略，并指定层与层之间当发现缓存不一致时（有的丢失了，有的还在）的更新策略</li>
+			<li>支持通过配置文件(.config)形式定义缓存策略（过期策略、缓存Handle等），就可以不修改代码来随时更改</li>
+			<li>有针对每个Layer缓存的Add、Remove、Update、Hit统计信息输出</li>
+			<li>有提供Logging接口，以记录缓存在Add、Remove、Update、Hit时的详细信息输入</li>
+			<li>有提供分布式缓存不一致的解决方案（ClientA、ClientB共享同一份缓存，同时各自缓存一份In-Process缓存在本地，当ClientA更新了本地缓存时，通过消息的方式通知ClientB更新本地缓存）</li>
+		</ul>
+		
+		
+		
+		<h4>Add Cache</h4>
+		<p>
+		添加缓存；已存在时返回false。
+		</p>
+		<pre><code><xmp>
+var cacheManager = CacheFactory.Build<List<Warehouse>>(setting =>
+{
+    setting.WithDictionaryHandle();
+    setting.WithSystemRuntimeCacheHandle();
+});
+
+cacheManager.Add(Warehouse.CACHE_KEY, Warehouse.Warehouses);
+var caches = cacheManager.Get(Warehouse.CACHE_KEY);
+Assert.That(caches.Count, Is.EqualTo(2));
+Assert.That(cacheManager.CacheHandles.Count, Is.EqualTo(2));
+		</xmp></code></pre>
+		
+		<h4>Add Or Get Existing</h4>
+		<p>
+		返回新添加的或已存在相同Key的缓存。
+		</p>
+		<pre><code><xmp>
+var cacheManager = CacheFactory.Build<List<Warehouse>>(settings =>
+{
+    settings.WithDictionaryHandle();
+});
+
+var caches = cacheManager.GetOrAdd(Warehouse.CACHE_KEY, Warehouse.Warehouses);
+Assert.That(caches.Count, Is.EqualTo(2));
+		</xmp></code></pre>
+		
+		<h4>Add Or Update Existing</h4>
+		<p>
+		不存在就添加，存在就更新。
+		</p>
+		<pre><code><xmp>
+var manager = CacheFactory.Build<List<Company>>(settings =>
+{
+    settings.WithDictionaryHandle();
+});
+
+manager.Add(Company.CACHE_KEY, Company.MovieCompanies);
+manager.AddOrUpdate(Company.CACHE_KEY, Company.ITCompanies, o => Company.ITCompanies);
+
+var caches = manager.Get(Company.CACHE_KEY);
+Assert.That(caches, Is.Not.Null);
+Assert.That(caches.Count, Is.EqualTo(2));
+Assert.That(caches[0].CompanyType, Is.EqualTo(CompanyType.ITCompany));
+		</xmp></code></pre>
+		
+		<h4>Update Cache</h4>
+		<p>
+		更新缓存。
+		</p>
+		<pre><code><xmp>
+var manager = CacheFactory.Build(settings =>
+{
+    settings.WithDictionaryHandle();
+});
+
+manager.Add(Company.CACHE_KEY, Company.MovieCompanies);
+manager.Update(Company.CACHE_KEY, o => Company.ITCompanies.Union(o as List<Company>).ToList());
+var caches = manager.Get<List<Company>>(Company.CACHE_KEY);
+
+Assert.That(caches.Count, Is.EqualTo(4));
+		</xmp></code></pre>
+		
+		<h4>Create Cache Instance From Config</h4>
+		<p>
+		从配置文件加载缓存策略等信息。
+		</p>
+		<ul>
+			<li>Caches.config
+			<pre><code><xmp>
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+<configSections>
+  <section name="cacheManager" type="CacheManager.Core.Configuration.CacheManagerSection, CacheManager.Core" />
+</configSections>
+
+<cacheManager>
+  <managers>
+    <cache  name="ITCompaniesCacheConfig" updateMode="Up" enableStatistics="false" enablePerformanceCounters="false">
+      <handle name="handleName" ref="systemRuntimeHandle" expirationMode="Absolute" timeout="50s"/>
+    </cache>
+    <cache  name="MoviesCompaniesCacheConfig" updateMode="Up" enableStatistics="false" enablePerformanceCounters="false">
+      <handle name="handleName" ref="systemRuntimeHandle" expirationMode="Absolute" timeout="50s"/>
+    </cache>
+  </managers>
+  <cacheHandles>
+    <handleDef  id="systemRuntimeHandle" type="CacheManager.SystemRuntimeCaching.MemoryCacheHandle`1, CacheManager.SystemRuntimeCaching"
+        defaultExpirationMode="Sliding" defaultTimeout="5m"/>
+  </cacheHandles>
+</cacheManager>
+</configuration>
+		</xmp></code></pre>
+			</li>
+			<li>Create Cache Instance From Config
+			<pre><code><xmp>
+var cfg = ConfigurationBuilder.LoadConfigurationFile("Caches.config", "ITCompaniesCacheConfig");
+var manager = CacheFactory.FromConfiguration<List<Company>>(cfg);
+manager.Add(Company.CACHE_KEY, Company.ITCompanies);
+var caches = manager.Get(Company.CACHE_KEY);
+
+Assert.That(caches, Is.Not.Null);
+Assert.That(caches.Count, Is.EqualTo(2));
+		</xmp></code></pre>
+			</li>
+		</ul>
+		
+		
+		
+		<h4>Cache With Multiple Layers</h4>
+		<p>
+		将同一份数据缓存到多个Layer，会按Layer（Handle）的添加顺序去命中缓存（返回第一个命中的）。
+		</p>
+		<pre><code><xmp>
+var manager = CacheFactory.Build<List<Company>>(settings =>
+ {
+     settings.WithDictionaryHandle().WithExpiration(ExpirationMode.Absolute, TimeSpan.FromSeconds(1));
+     settings.WithSystemRuntimeCacheHandle();
+     settings.WithUpdateMode(CacheUpdateMode.None);
+ });
+
+// all cache layer hold the ITCompanies.
+manager.Add(Company.CACHE_KEY, Company.ITCompanies);
+
+Thread.Sleep(1000);
+
+var caches = manager.Get(Company.CACHE_KEY); // ONLY When GET: If find some layer was difference from others, the "Update" strategy will be executed.
+
+Assert.That(caches, Is.Not.Null);
+Assert.That(caches.Count, Is.EqualTo(2));
+
+Assert.That(manager.CacheHandles.Count, Is.EqualTo(2));
+Assert.That(manager.CacheHandles.First().Count, Is.EqualTo(0));
+Assert.That(manager.CacheHandles.Last().Count, Is.GreaterThanOrEqualTo(1));
+		</xmp></code></pre>
+		
+		<h4>Cache Expire</h4>
+		<p>
+		缓存过期是针对每个Layer的，可以用连续调用的方式来初始化一个带有过期策略的CacheManager。
+		</p>
+		<pre><code><xmp>
+var manager = CacheFactory.Build<List<Company>>(settings =>
+{
+ settings.WithDictionaryHandle().WithExpiration(ExpirationMode.Absolute, TimeSpan.FromSeconds(1));
+ settings.WithSystemRuntimeCacheHandle();
+ settings.WithUpdateMode(CacheUpdateMode.None);
+});
+		</xmp></code></pre>
+		<p>
+		注意这里的WithUpdateMode,CacheUpdateMode有三种值，分别代表：
+		</p>
+		<ul>
+			<li>CacheUpdateMode.None: 无论缓存首先被命中在哪一个的Layer，各个Layer存储的缓存不做任何更新即使它们彼此不一样；</li>
+			<li>CacheUpdateMode.Full: 无论缓存首先被命中在哪一个的Layer，各个Layer存储的缓存将被更新一致当它们彼此不一样时；</li>
+			<li>CacheUpdateMode.UP: 更新缓存首先被命中的那个Layer添加顺序之上的所有Layer的缓存以保持一致。</li>
+		</ul>
+		
+		
+		
+		<h4>Cache Statistics</h4>
+		<p>
+		Cache在各种Operation下的次数统计信息输出。
+		</p>
+		<pre><code><xmp>
+var manager = CacheFactory.Build<List<Company>>(settings =>
+{
+    settings.WithDictionaryHandle().WithExpiration(ExpirationMode.Absolute,             TimeSpan.FromSeconds(1)).EnableStatistics().EnablePerformanceCounters();    
+    settings.WithSystemRuntimeCacheHandle().EnableStatistics();
+    settings.WithUpdateMode(CacheUpdateMode.None);
+});
+
+// all cache layer hold the ITCompanies.
+manager.Add(Company.CACHE_KEY, Company.ITCompanies);
+manager.Put(Company.CACHE_KEY, Company.MovieCompanies);
+manager.Remove(Company.CACHE_KEY);
+manager.Add(Company.CACHE_KEY, Company.ITCompanies);
+
+var cachesFinal = manager.Get(Company.CACHE_KEY);
+foreach (var handle in manager.CacheHandles)
+{
+    var stats = handle.Stats;
+    Console.WriteLine(string.Format(
+            "Items: {0}, Hits: {1}, Miss: {2}, Remove: {3}, ClearRegion: {4}, Clear: {5}, Adds: {6}, Puts: {7}, Gets: {8}",
+                stats.GetStatistic(CacheStatsCounterType.Items),
+                stats.GetStatistic(CacheStatsCounterType.Hits),
+                stats.GetStatistic(CacheStatsCounterType.Misses),
+                stats.GetStatistic(CacheStatsCounterType.RemoveCalls),
+                stats.GetStatistic(CacheStatsCounterType.ClearRegionCalls),
+                stats.GetStatistic(CacheStatsCounterType.ClearCalls),
+                stats.GetStatistic(CacheStatsCounterType.AddCalls),
+                stats.GetStatistic(CacheStatsCounterType.PutCalls),
+                stats.GetStatistic(CacheStatsCounterType.GetCalls)
+            ));
+}
+		</xmp></code></pre>
+		
+		<h4>Cache Logging</h4>
+		<p>
+		支持Cache在各种Operation下的日志记录。
+		</p>
+		<pre><code><xmp>
+var manager = CacheFactory.Build<List<Company>>(settings =>
+{
+    settings.WithDictionaryHandle().WithExpiration(ExpirationMode.Absolute,  TimeSpan.FromSeconds(1)).EnableStatistics().EnablePerformanceCounters();
+    settings.WithSystemRuntimeCacheHandle().EnableStatistics();
+    settings.WithUpdateMode(CacheUpdateMode.None);
+    settings.WithLogging(typeof(CustomerLogFactory));
+});
+
+// all cache layer hold the ITCompanies.
+manager.Add(Company.CACHE_KEY, Company.ITCompanies);
+manager.Put(Company.CACHE_KEY, Company.MovieCompanies);
+manager.Remove(Company.CACHE_KEY);
+manager.Add(Company.CACHE_KEY, Company.ITCompanies);
+
+var caches = manager.Get(Company.CACHE_KEY);
+Assert.That(caches, Is.Not.Null);
+		</xmp></code></pre>
+		<p>
+		OutPut Like Below:
+		</p>
+				
+		<pre><code><xmp>
+CacheManager.Core.BaseCacheManager<object>: Trace: Add or update: key .
+CacheManager.Core.BaseCacheManager<object>: Trace: Add: key 
+CacheManager.Core.BaseCacheManager<object>: Trace: Add: key  to handle redis FAILED. Evicting items from other handles.
+CacheManager.Core.BaseCacheManager<object>: Trace: Evict from other handles: key : excluding handle 1.
+CacheManager.Core.BaseCacheManager<object>: Trace: Evict from handle: key : on handle default.
+CacheManager.Core.BaseCacheManager<object>: Trace: Add or update: key : add failed, trying to update...
+CacheManager.Core.BaseCacheManager<object>: Trace: Update: key .
+CacheManager.Core.BaseCacheManager<object>: Trace: Update: key : tried on handle redis: result: Success.
+CacheManager.Core.BaseCacheManager<object>: Trace: Evict from handles above: key : above handle 1.
+CacheManager.Core.BaseCacheManager<object>: Trace: Evict from handle: key : on handle default.
+CacheManager.Core.BaseCacheManager<object>: Trace: Add to handles below: key : below handle 1.
+CacheManager.Core.BaseCacheManager<object>: Trace: Add or update: key : successfully updated.
+
+		</xmp></code></pre>
+		
+		
+	
+		 <div style="text-align:center;display:block;">
+		 <div style="border-top:1px dashed #cccccc;height: 1px;overflow:hidden;margin:10px;"></div>
+ <image height="120px" width="120px" src="../images/payme.png" />
+ <h4 style="color:orange;font-weight:bold">(打赏)</h4>
+ <h3 style="color:red;font-weight:bold">If you want to pay for this</br>I will list your account name here.</br> HA HA!</h3>
+ </div>
+      </section>
+	  
+	  
+      <footer>
+	  <p><small>QQ:<a href="javascript:void(0)">1010267566</a>
+		Email:<a href="mailto:denghejun@live.cn?subject=About%20Leo's%20Github%20Pages&body=Anything%20you%20want%20to%20say%20here%20...">denghejun@live.cn</a>
+		
+		<br/>Hosted on GitHub Pages <br/>&mdash;<a href="https://denghejun.github.io">leo deng</a></small></p>
+		<p>
+		<small>
+		作者：Leo 
+ <br/>出处：<a href="http://denghejun.github.io">http://denghejun.github.io</a>
+ 本文版权归作者所有<br/>转载请声明作者及来源!
+ </small>
+		</p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+  </body>
+</html>
