@@ -1,3 +1,4 @@
+
 var sectionHeight = function() {
   var total    = $(window).height(),
       $section = $('section').css('height','auto');
@@ -26,6 +27,8 @@ $(document).ready(function(){
     $(this).parent().addClass("active");
     event.preventDefault();    
   });
+  
+  // $('body').resize(sectionHeight);
   
   sectionHeight();
   
