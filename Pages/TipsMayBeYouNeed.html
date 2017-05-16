@@ -706,7 +706,50 @@ Basic asXSdsasdIHJKDksjG="
 	<p>参考：<a href="https://github.com/stedolan/jq" target="_blank">https://github.com/stedolan/jq</a> & <a href="https://stedolan.github.io/jq/" target="_blank">https://stedolan.github.io/jq/</a></p>
 
 	<p>
-		显然，如果你在做一些网络爬虫的小玩意儿，我想是时候采用一些有趣的技术了，比如上边的 curl＋pup＋jq。
+		显然，如果你在做一些网络爬虫的小玩意儿，我想是时候采用一些有趣的技术了，比如上边的 curl＋pup＋jq。<br/>
+		例如你可以在命令行中用“｜”做分隔以传递结果依次处理：
+		<pre><code><xmp>
+curl https://www.baidu.com --insecure | 
+pup 'div#ftConw json{}' | jq '.[0].children[1].text'
+
+// 结果：
+{
+  "children": [
+    {
+      "href": "http://www.baidu.com/duty/",
+      "tag": "a",
+      "text": "使用百度前必读"
+    },
+    {
+      "class": "cp-feedback",
+      "href": "http://jianyi.baidu.com/",
+      "tag": "a",
+      "text": "意见反馈"
+    },
+    {
+      "src": "//www.baidu.com/img/gs.gif",
+      "tag": "img"
+    }
+  ],
+  "id": "cp",
+  "tag": "p",
+  "text": "©2017 Baidu 京ICP证030173号"
+}
+
+curl https://www.baidu.com --insecure | 
+pup 'div#ftConw json{}' | jq '.[0].children[1].text'
+
+//结果：
+"©2017 Baidu 京ICP证030173号“
+		</xmp></code></pre>
+
+		<p>
+			同时，你也可以把结果写入文件：
+		<pre><code><xmp>
+curl https://www.baidu.com --insecure | 
+pup 'div#ftConw json{}' | jq '.[0].children[1].text' > data.json
+		</xmp></code></pre>
+		</p>
 		</p>
 		
 
