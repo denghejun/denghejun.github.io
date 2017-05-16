@@ -676,8 +676,42 @@ INTO dbo.yyyLog
 WHERE 
 	InDate < GETDATE()-7
 		</xmp></code></pre>
+
+
+		<h2>有趣的命令行工具</h2>
+		<h4>curl</h4>
+		在命令行中用来发起http请求。可以附加header，parameter等等。
+		<pre><code><xmp>
+curl http://www.baidu.com
+		</xmp></code></pre>
+
+		<pre><code><xmp>
+curl https://www.baidu.com --insecure // 忽略SSL严格验证
+		</xmp></code></pre>
 		
+		<pre><code><xmp>
+// 使用Basic Http验证方式（username:password）的可以把在POSTMan中添加
+// Http Basic验证之后,可以在header中拿到加密后的Authorization
+curl https://www.baidu.com --insecure --header "Authorization=
+Basic asXSdsasdIHJKDksjG=" 
+		</xmp></code></pre>
+
+
+	<h4>pup</h4>
+		<p>在命令行中用来对html做DOM文档元素筛选和查找。我觉得非常有趣的一点是它可以把DOM结构转换成JSON对象，这就大大方便了对DOM元素的访问。</p>
+		<p>参考：<a href="https://github.com/ericchiang/pup" target="_blank">https://github.com/ericchiang/pup</a></p>
+
+	<h4>jq</h4>
+	在命令行中对JSON对象进行操作和数据提取。
+	<p>参考：<a href="https://github.com/stedolan/jq" target="_blank">https://github.com/stedolan/jq</a> & <a href="https://stedolan.github.io/jq/" target="_blank">https://stedolan.github.io/jq/</a></p>
+
+	<p>
+		显然，如果你在做一些网络爬虫的小玩意儿，我想是时候采用一些有趣的技术了，比如上边的 curl＋pup＋jq。
+		</p>
 		
+
+
+
 		
 		 <div style="text-align:center;display:block;">
 		 <div style="border-top:1px dashed #cccccc;height: 1px;overflow:hidden;margin:10px;"></div>
