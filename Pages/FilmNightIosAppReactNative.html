@@ -103,13 +103,13 @@
 </p>
 
 <p>
-  实际上，你的 Component 负责来以下两件事情(将来或许更多)：
+  实际上，你的 Component 负责了以下两件事情(将来或许更多)：
   <ul>
     <li>负责从后端API拉取 Comments 的数据</li>
     <li>负责将它以一定的形式渲染到UI</li>
   </ul>
 
-  我想说的是，这并没有什么错误。但忽略来React的一大优势：Reusability (可重用性)。
+  我想说的是，这并没有什么错误。但忽略了 React 的一大优势：Reusability (可重用性)。
 </p>
 <p>
     来吧，换一种角度思考。既然我们推崇职责单一原则，那么显然，以上风格的确是存在设计上
@@ -143,7 +143,7 @@
 }
   </xmp></code></pre>
 </p>
-<p>It's better now! 它们看起来就优雅来许多！有很重要的一点必须体会到：component 的 props 是只读的，我们就用它来决定视图应该渲染成什么样子，
+<p>It's better now! 它们看起来就优雅了许多！有很重要的一点必须体会到：component 的 props 是只读的，我们就用它来决定视图应该渲染成什么样子，
   至于更为复杂的 state 就交给container处理吧。
 
 但是这一切都不必你手动的分离出Container，<a href="https://github.com/reactjs/react-redux" target="_blank">react-redux</a>中的 connect 方法
@@ -153,7 +153,7 @@
 <h2>&lt;&lt;Film Night&gt;&gt;</h2>
 <p>
   它是一款关于电影推荐和搜索的APP，它会定位你所在的城市并推送正在上映和即将上映的新电影。
-  是基于以上我阐述的总总之后的产物，我用到来前面我所有提到的理论和事实。
+  是基于以上我阐述的总总之后的产物，我用到了前面我所有提到的理论和事实。
 </p>
 <p>
   目前，这是它的样子：
@@ -167,6 +167,15 @@
 <image height="250px" width="160px" style="border: 1px solid orange" src="../images/film-night/08.PNG" />
 <image height="250px" width="160px" style="border: 1px solid orange" src="../images/film-night/09.PNG" />
 <image height="250px" width="160px" style="border: 1px solid orange" src="../images/film-night/10.PNG" />
+</p>
+
+<p>
+是的，学习 React Native或是 React 的成本很低，希望能进一步学习它的源码和思想，这才是最重要的；为什么往往在类似 Facebook 一样的公司里容易诞生出
+一种新的框架或是开发模式，我想大概那里更接近事实真相。
+</p>
+
+<p>
+  更多 React &React Native 资源，请参考<a href="https://js.coach/react-native#content" target="_blank">Js Coach</a>.
 </p>
 
 		 <div style="text-align:center;display:block;">
