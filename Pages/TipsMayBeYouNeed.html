@@ -28,10 +28,10 @@
       </div><!-- end banner -->
 
     <div class="wrapper">
-	<nav> 
+	<nav>
         <ul></ul>
 		<a href='../index.html'>Back Home</a>
-      </nav> 
+      </nav>
       <section>
 	  <image height="200px" width="100%" src="../images/13ta0080rf.jpg"></image>
 	  <hr/>
@@ -41,7 +41,7 @@
 		<p>
 		<a href="https://www.git-scm.com/book/zh/v2" target="_blank">https://www.git-scm.com/book/zh/v2</a>
 		</p>
-		
+
 		<h4>当本地误删除了某文件时</h4>
 		<ul>
 			<li>单个文件 git checkout App1/a.php</li>
@@ -64,33 +64,33 @@
 			<li>切换到一个已经存在的分支: git checkout your-branch-name</li>
 			<li>创建一个不存在的分支并切换到该分支: git chekout -b your-branch-name</li>
 			<li><p>分支重命名：</p>
-				
+
 				<pre><code><xmp>
 # Rename branch locally
 git branch -m old_branch new_branch
 
 # Delete the old branch
 git push origin :old_branch
-					
+
 # Push the new branch, set local branch to track the new remote
 git push --set-upstream origin new_branch </xmp>
-				</code></pre> 
+				</code></pre>
 			</li>
-			
+
 		</ul>
-		
+
 		<h4>push & pull</h4>
 		<ul>
 			<li>当执行push推送时，若发现server端的文件与本地不是最新的时，将会push失败，此时执行：git pull拉取最新的server端版本后方可成功。</li>
 			<li>如果git commit了多次，但是都还没有push，这时输入：git push即可全部push，而使用git push origin master则报错。</li>
 			<li>有一次我git的密码修改了，我是执行这个命令：git config --global credential.helper，之后，就会在push时，重新输入密码了</li>
 		</ul>
-		
+
 		<h4>auto complete</h4>
 		<ul>
 			<li>在terminal中当输入不完整的名词时，按下Tab键，将会自动补全；最常用的场景就是操作那些较长的分支名称。</li>
 		</ul>
-		
+
 			<h4>merge</h4>
 		<ul>
 			<li>以下命令执行Merge动作
@@ -101,16 +101,50 @@ git merge --no-ff YourBranchNameNeedToMerge
 			</li>
 			<li>
 			之后，会要求输入一个 merge commit message：
-		
+
 			<pre><code>
 1. 按下"i"键进入"insert"模式
 2. 输入commit message之后，按"Esc"退出输入模式
 3. 直接输入":wq"保存并退出，完成commit
 4. 最后使用"git push origin master"，将合并结果推送到"master"分支
 			</code></pre>
-			
+
 			</li>
 		</ul>
+
+    <h4>git log</h4>
+		<ul>
+			<li>查找包含某关键字的Log，比如你要确认某张卡的改动是否已经包含：</li>
+      <pre><code>
+git log --grep=DOT-1234
+			</code></pre>
+		</ul>
+
+    <h4>git show</h4>
+		<ul>
+			<li>可以show commit的具体change</li>
+      <pre><code>
+git show your_commit_hash_number
+			</code></pre>
+      <li>可以show 具体tag信息</li>
+      <pre><code>
+git show your_tag_name
+			</code></pre>
+		</ul>
+
+    <h4>git diff</h4>
+		<ul>
+			<li>可以diff的具体文件的change</li>
+      <pre><code>
+git diff your_file_full_path_name
+			</code></pre>
+      <li>可以diff 2 个 commit之间的change</li>
+      <pre><code>
+git diff commit_hash_nuber_1 commit_hash_number_2
+			</code></pre>
+		</ul>
+
+
 
 		<h4>SSH keys</h4>
 		<p>
@@ -155,8 +189,8 @@ xclip -sel clip < ~/.ssh/id_rsa.pub
 </xmp></code></pre>
 		</li>
 		</ul>
-		
-		
+
+
 		<h2>NuGet</h2>
 		<h4>proxy setting</h4>
 		<ul>
@@ -166,14 +200,14 @@ xclip -sel clip < ~/.ssh/id_rsa.pub
      <config>
         <add key="http_proxy" value="http://my.proxy.address:port" />
         <add key="http_proxy.user" value="mydomain\myUserName" />
-        <add key="http_proxy.password" 
+        <add key="http_proxy.password"
 		value="base64encodedHopefullyEncryptedPassword" />
      </config>
 </configuration></xmp>
-				</code></pre> 
+				</code></pre>
 			</li>
 		</ul>
-		
+
 		<h4>pack package</h4>
 		打包并上传一个.csproj的Nuget包分四步（在.csproj文件目录下进行）
 		<ul>
@@ -213,9 +247,9 @@ nuget setApiKey <API Key> -Source <Server URL>
 			</pre>
 			</li>
 		</ul>
-		
-		
-		
+
+
+
 		<h2>VS Code</h2>
 		<h4>switch project</h4>
 		<ul>
@@ -226,7 +260,7 @@ nuget setApiKey <API Key> -Source <Server URL>
 		</ul>
 			</li>
 		</ul>
-		
+
 		<h4>debug</h4>
 		<ul>
 			<li>.NET Core项目，当需要调式程序时，设置launch.json文件，如下(program属性指向了需要调试的程序)：
@@ -285,10 +319,10 @@ nuget setApiKey <API Key> -Source <Server URL>
 </pre>
 			</li>
 		</ul>
-		
-		
-		
-		
+
+
+
+
 		<h2>.NET</h2>
 		<h4>End abstract/virtual</h4>
 		C#中的sealed关键字有两种用途
@@ -308,7 +342,7 @@ nuget setApiKey <API Key> -Source <Server URL>
 			<li>MainForm顶部添加MenuStrip</li>
 			<li>MenuStrip.MdiWindowListItem = some menu item.可显示所有已经打开的窗口列表</li>
 		</ul>
-		
+
 		<h2>RESTful API</h2>
 		<h4>
 		Service Stack
@@ -321,7 +355,7 @@ nuget setApiKey <API Key> -Source <Server URL>
 		<p>
 		See also：<a target='_blank' href='http://docs.servicestack.net/'>Service Stack Product Docs</a>
 		</p>
-		
+
 		<h2>SQL Server</h2>
 		<h4>嵌套事务快速模板</h4>
 		<pre><code><xmp>
@@ -359,29 +393,29 @@ IF @TranCounter = 0
                );
 END CATCH
 		</xmp></code></pre>
-		
-		
+
+
 		<h4>创建表对象</h4>
 		<pre><code><xmp>
 USE dbname
 GO
-/*================================================================================  
-Server:    ?  
-DataBase:  ?  
+/*================================================================================
+Server:    ?
+DataBase:  ?
 Author:    ?
-Object:    ? 
-Version:   1.0  
+Object:    ?
+Version:   1.0
 Date:      ??/??/????
 Content:   ?
-----------------------------------------------------------------------------------  
-Modified history:      
-      
-Date        Modified by    VER    Description      
-------------------------------------------------------------  
-??/??/????  ??			   1.0    Create.  
-================================================================================*/  
+----------------------------------------------------------------------------------
+Modified history:
 
-/* Policies by DBA Team 
+Date        Modified by    VER    Description
+------------------------------------------------------------
+??/??/????  ??			   1.0    Create.
+================================================================================*/
+
+/* Policies by DBA Team
 	--BYDBA 1 不建议使用联合主键，而是用自增列配合"创建唯一约束"或"创建唯一索引"
 	--BYDBA 1.主键规范命名为：PK_表名或PK_表名_主键字段名
 	--BYDBA 1 xml/varhcar(max)/nvarchar(max)这三种类型的列，DBA 建议存储在独立的表中，否则会产生很大的性能问题
@@ -403,9 +437,9 @@ CREATE Table [dbo].[Table]
 ) ON [PRIMARY]
 GO
 
---How to create standard nonclustered index 
+--How to create standard nonclustered index
 --创建普通索引
-CREATE NONCLUSTERED INDEX IX_Table_Field1 ON dbo.Table 
+CREATE NONCLUSTERED INDEX IX_Table_Field1 ON dbo.Table
 (
 	[Field1]
 )WITH (FILLFACTOR = 90)
@@ -419,8 +453,8 @@ CREATE UNIQUE NONCLUSTERED INDEX [IXU_Table_Code1_Code2] ON dbo.[Table]
 )WITH (FILLFACTOR=80) ON [PRIMARY]
 
 		</xmp></code></pre>
-		
-		
+
+
 		<h4>创建表值函数</h4>
 		<pre><code><xmp>
 USE [Warehouse]
@@ -432,22 +466,22 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE FUNCTION [dbo].[FN_FunctionName] (  
-    @Param1 varchar(100),  
-    @Param2 varchar(100)  
-    ) RETURNS @ResultTable table (Name varchar(100))  
-AS  
-BEGIN  
+CREATE FUNCTION [dbo].[FN_FunctionName] (
+    @Param1 varchar(100),
+    @Param2 varchar(100)
+    ) RETURNS @ResultTable table (Name varchar(100))
+AS
+BEGIN
     INSERT INTO @ResultTable (Name) VALUES (@Param1 + @Param2)
-    RETURN  
-END  
-     
+    RETURN
+END
+
 GO
 
 
 --select Name from Warehouse.dbo.[FN_FunctionName]('Hello','World!')
 		</xmp></code></pre>
-		
+
 		<h4>创建单值函数</h4>
 		<pre><code><xmp>
 USE [Warehouse]
@@ -475,30 +509,30 @@ GO
 
 --select Warehouse.dbo.[FN_FunctionName1]('AB','CD')
 		</xmp></code></pre>
-		
-		
+
+
 		<h4>创建存储过程</h4>
 		<pre><code><xmp>
 USE dbname
 Go
-/*================================================================================  
-Server:    ?  
+/*================================================================================
+Server:    ?
 DataBase:  ?
-Team:	   ?  
+Team:	   ?
 Author:    ?
-Object:    ? 
-Version:   1.0  
+Object:    ?
+Version:   1.0
 Date:      ??/??/????
 Content:   ?
-----------------------------------------------------------------------------------  
-Modified history:      
-      
-Date        Modified by    VER    Description      
-------------------------------------------------------------  
-??/??/????  ??			   1.0    Create.  
-================================================================================*/  
+----------------------------------------------------------------------------------
+Modified history:
 
-CREATE PROCEDURE [dbo].[UP_YourProcName] 
+Date        Modified by    VER    Description
+------------------------------------------------------------
+??/??/????  ??			   1.0    Create.
+================================================================================*/
+
+CREATE PROCEDURE [dbo].[UP_YourProcName]
 	@Parameter   INT
 AS
 SET NOCOUNT ON
@@ -510,38 +544,38 @@ SET NOCOUNT ON
 -- usage
 -- EXEC dbname.dbo.UP_YourProcName 123,...
 		</xmp></code></pre>
-		
-		
+
+
 		<h4>创建视图</h4>
 		<pre><code><xmp>
 USE dbname
 Go
-/*================================================================================  
-Server:    ?  
-DataBase:  ? 
-Team:	   ? 
+/*================================================================================
+Server:    ?
+DataBase:  ?
+Team:	   ?
 Author:    ?
-Object:    ? 
-Version:   1.0  
+Object:    ?
+Version:   1.0
 Date:      ??/??/????
 Content:   ?
-----------------------------------------------------------------------------------  
-Modified history:      
-      
-Date        Modified by    VER    Description      
-------------------------------------------------------------  
-??/??/????  ??			   1.0    Create.  
-================================================================================*/  
+----------------------------------------------------------------------------------
+Modified history:
 
-CREATE VIEW [dbo].[UV_EC_ViewNeweggItemsBase_Endeca_V1] AS 
+Date        Modified by    VER    Description
+------------------------------------------------------------
+??/??/????  ??			   1.0    Create.
+================================================================================*/
+
+CREATE VIEW [dbo].[UV_EC_ViewNeweggItemsBase_Endeca_V1] AS
 --Put your code here
 		</xmp></code></pre>
-		
+
 		<h4>普通XML查询语法</h4>
 		<pre><code><xmp>
 /*
 	BYDBA 1 解析XML时获取单一值时，不要使用nodes()
-	DECLARE @xml xml 
+	DECLARE @xml xml
 	SET @xml = N'<b>text1
 				   <c>text2
 					  <d>text3
@@ -551,9 +585,9 @@ CREATE VIEW [dbo].[UV_EC_ViewNeweggItemsBase_Endeca_V1] AS
 				   </c>
 			  </b>'
 
-	SELECT 
-        @xml.value('(/b/c/d/text())[1]','char(5)') 
-       ,@xml.value('(/b/c/f/text())[1]','char(5)') 
+	SELECT
+        @xml.value('(/b/c/d/text())[1]','char(5)')
+       ,@xml.value('(/b/c/f/text())[1]','char(5)')
 */
 
 
@@ -572,15 +606,15 @@ CREATE VIEW [dbo].[UV_EC_ViewNeweggItemsBase_Endeca_V1] AS
 	;WITH xmlnamespaces(DEFAULT 'https://soa.newegg.com/dba'
 								,'https://soa.neweg.com' AS ns)
 
-	SELECT  
-		@xml.value('(/b/c/text())[1]','char(5)') AS xml_col_val 
+	SELECT
+		@xml.value('(/b/c/text())[1]','char(5)') AS xml_col_val
 	   ,@xml.value('(/b/c/ns:d/text())[1]','char(5)') AS xml_col_va2
 */
 
 
 
 /*retrieve value 取单个值
-	DECLARE @xml xml 
+	DECLARE @xml xml
 	SET @xml = N'<b>text1
 					   <c>text2
 						  <d>text3
@@ -592,34 +626,34 @@ CREATE VIEW [dbo].[UV_EC_ViewNeweggItemsBase_Endeca_V1] AS
 	SELECT @xml.value('(/b/c/text())[1]','char(5)') AS xml_col_val
 */
 		</xmp></code></pre>
-		
+
 		<h4>定义游标</h4>
 		<pre><code><xmp>
 /*
 	定义游标时，如果不是特别需要，使用LOCAL关键显式的将游标定义为局部游标，
 	尽量避免使用全局（GLOBAL，这是数据库的默认行为）游标；没有特殊需要的话，
-	尽量使用FORWARD_ONLY READ_ONLY STATIC游标, 
+	尽量使用FORWARD_ONLY READ_ONLY STATIC游标,
 	--For example:*/
-    DECLARE your_cursor CURSOR 
-        LOCAL 
-        STATIC 
-        FORWARD_ONLY 
-        READ_ONLY 
-    FOR  
+    DECLARE your_cursor CURSOR
+        LOCAL
+        STATIC
+        FORWARD_ONLY
+        READ_ONLY
+    FOR
 		SELECT …
 
-	OPEN your_cursor      
-    FETCH NEXT FROM cur INTO @your_variable 
-    WHILE @@fetch_status = 0      
-      BEGIN      
+	OPEN your_cursor
+    FETCH NEXT FROM cur INTO @your_variable
+    WHILE @@fetch_status = 0
+      BEGIN
 	--Put your code here to use @your_variable
 
-		FETCH NEXT FROM cur INTO @your_variable 
-      END  
-	CLOSE your_cursor      
+		FETCH NEXT FROM cur INTO @your_variable
+      END
+	CLOSE your_cursor
 	DEALLOCATE your_cursor
 		</xmp></code></pre>
-		
+
 		<h4>循环删除、更新</h4>
 		<pre><code><xmp>
 DECLARE
@@ -644,27 +678,27 @@ BEGIN;
     DELETE TOP(@row_batch) SRC
     FROM source_table SRC       -- 源表
     WHERE yourcondition = 1		-- 记录处理条件
-	
+
 	--UPDATE
-    UPDATE TOP(@row_batch) SRC 
+    UPDATE TOP(@row_batch) SRC
 		SET SRC.field='
     FROM source_table SRC       -- 源表
     WHERE SRC.field is NULL		-- 记录处理条件
 ---------operation statement-----*/
-    
+
     SELECT
        @row_count = @@ROWCOUNT,
        @rows = @rows + @row_count
     ;
-    
+
     WAITFOR DELAY '00:00:10';   -- 每批处理之间的延时
 END;
 
 		</xmp></code></pre>
-		
+
 		<h4>删除插入</h4>
 		<pre><code><xmp>
-DELETE TOP(100) 
+DELETE TOP(100)
 FROM dbo.xxxLog OUTPUT
    ,DELETED.[LogName]
    ,DELETED.[LogType]
@@ -673,7 +707,7 @@ FROM dbo.xxxLog OUTPUT
    ,DELETED.[LastEditDate]
    ,DELETED.[LastEditUser]
 INTO dbo.yyyLog
-WHERE 
+WHERE
 	InDate < GETDATE()-7
 		</xmp></code></pre>
 
@@ -688,12 +722,12 @@ curl http://www.baidu.com
 		<pre><code><xmp>
 curl https://www.baidu.com --insecure // 忽略SSL严格验证
 		</xmp></code></pre>
-		
+
 		<pre><code><xmp>
 // 使用Basic Http验证方式（username:password）的可以把在POSTMan中添加
 // Http Basic验证之后,可以在header中拿到加密后的Authorization
 curl https://www.baidu.com --insecure --header "Authorization=
-Basic asXSdsasdIHJKDksjG=" 
+Basic asXSdsasdIHJKDksjG="
 		</xmp></code></pre>
 
 
@@ -709,7 +743,7 @@ Basic asXSdsasdIHJKDksjG="
 		显然，如果你在做一些网络爬虫的小玩意儿，我想是时候采用一些有趣的技术了，比如上边的 curl＋pup＋jq。<br/>
 		例如你可以在命令行中用“｜”做分隔以传递结果依次处理：
 		<pre><code><xmp>
-curl https://www.baidu.com --insecure | 
+curl https://www.baidu.com --insecure |
 pup 'div#ftConw json{}' | jq '.[0].children[1].text'
 
 // 结果：
@@ -736,7 +770,7 @@ pup 'div#ftConw json{}' | jq '.[0].children[1].text'
   "text": "©2017 Baidu 京ICP证030173号"
 }
 
-curl https://www.baidu.com --insecure | 
+curl https://www.baidu.com --insecure |
 pup 'div#ftConw json{}' | jq '.[0].children[1].text'
 
 //结果：
@@ -746,16 +780,16 @@ pup 'div#ftConw json{}' | jq '.[0].children[1].text'
 		<p>
 			同时，你也可以把结果写入文件：
 		<pre><code><xmp>
-curl https://www.baidu.com --insecure | 
+curl https://www.baidu.com --insecure |
 pup 'div#ftConw json{}' | jq '.[0].children[1].text' > data.json
 		</xmp></code></pre>
 		</p>
 		</p>
-		
 
 
 
-		
+
+
 		 <div style="text-align:center;display:block;">
 		 <div style="border-top:1px dashed #cccccc;height: 1px;overflow:hidden;margin:10px;"></div>
  <image height="120px" width="120px" src="../images/payme.png" />
@@ -763,17 +797,17 @@ pup 'div#ftConw json{}' | jq '.[0].children[1].text' > data.json
  <h3 style="color:red;font-weight:bold">If you want to pay for this</br>I will list your account name here.</br> HA HA!</h3>
  </div>
       </section>
-	  
-	  
-	  
+
+
+
       <footer>
 	  <p><small>QQ:<a href="javascript:void(0)">1010267566</a>
 		Email:<a href="mailto:denghejun@live.cn?subject=About%20Leo's%20Github%20Pages&body=Anything%20you%20want%20to%20say%20here%20...">denghejun@live.cn</a>
-		
+
 		<br/>Hosted on GitHub Pages <br/>&mdash;<a href="https://denghejun.github.io">leo deng</a></small></p>
 		<p>
 		<small>
-		作者：Leo 
+		作者：Leo
  <br/>出处：<a href="http://denghejun.github.io">http://denghejun.github.io</a>
  本文版权归作者所有<br/>转载请声明作者及来源!
  </small>
