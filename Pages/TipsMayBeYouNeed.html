@@ -112,6 +112,36 @@ git merge --no-ff YourBranchNameNeedToMerge
 			</li>
 		</ul>
 
+    <h4>git init & git remote</h4>
+		<ul>
+			<li>将以存在的项目添加到一个新的git repo，一般会执行以下命令：</li>
+      <pre><code>
+cd your_project_folder
+git init
+touch .gitignore
+touch README.md
+git remote add origin https://github.com/your_project_name.git
+git add -A
+git commit -m 'init'
+git push origin master
+			</code></pre>
+		</ul>
+
+    <h4>git rm</h4>
+		<ul>
+			<li>有时候已经commit了，再加入.gitignore是无效的， 因为.gitignore只能忽略那些原来没有被track的文件，如果某些文件已经被纳入了版本管理中，
+        则修改.gitignore是无效的。所以需要删除暂存区让其un-track：</li>
+      <pre><code>
+cd your_project_folder
+git rm -r --cached  // 或者: git rm -r --cached ignore_file
+git add -A
+git commit -m 'new commit'
+git push origin master
+			</code></pre>
+		</ul>
+
+
+
     <h4>git log</h4>
 		<ul>
 			<li>查找包含某关键字的Log，比如你要确认某张卡的改动是否已经包含：</li>
@@ -321,6 +351,163 @@ nuget setApiKey <API Key> -Source <Server URL>
 		</ul>
 
 
+    <h2>Atom</h2>
+    <h4>github 推荐的新一代IDE</h4>
+   <p>
+     Atom 的可定制化程度非常之高，因为它本身实际上是运行在本地的一个 html （打开 Atom ，按下Command-alt-i即可查看元素）网页，
+     你可以随意的更改一些style class来调整 IDE 的样式，有2个主要的命令必须记住： </p>
+     <ul>
+ 			<li>Command-p：查找打开任意文件</li>
+ 			<li>Command-shift-p：执行 Atom 相关命令</li>
+ 		</ul>
+
+    <h4>自定义的样式</h4>
+    <p>
+      通过Command-shift-p -> Open Your Stylesheet可以打开style.less文件进行编辑(以我本地为例)：
+    </p>
+<pre>
+<code>
+<xmp>
+  @TreeViewFontFamily:  Arial !important; // Arial
+  @TreeViewFontSize: 15px !important;
+  @TreeViewStatusModifiedColor: rgb(177, 68, 58);
+  @TreeViewColor:  rgba(103, 103, 96, 0.34);
+  @TreeViewSelectedFolderItemsColor: rgba(255, 255, 255, 0.81);
+
+  @RecentProjectBackgroundColor: rgba(236, 15, 227, 0.66);
+  @RecentProjectColor: white;
+  @RecentProjectFontFamily: fantasy;
+
+  @EditorFontFamily:  fantasy !important; // "Helvetica Neue"
+  @EditorFontSize: 14px !important;
+  @TransparentColor: transparent;
+  @TransparentImportantColor: transparent !important;
+  @KeyOfObjectOrJsxElementColor: orange;
+  @CursorColor: yellow;
+  @LineNumberColor: rgb(126, 255, 37);
+  @CurrentLineNumberColor: rgb(236, 17, 161);
+  @TerminalColor: orange;
+  @MethodColor: rgb(82, 192, 233);
+  @ImportedVariableColor: #ccc;
+  @KeywordColor: rgba(236, 72, 131, 0.9);
+  @LanguageKeywordColor: rgba(236, 72, 131, 0.9);
+  @ObjectVariableColor: #ccc;
+  @ObjectPropertyColor: #ccc;
+  @PureStringColor: rgba(254, 254, 254, 0.47);
+  @OperatorColor: orange;
+
+  atom-text-editor {
+    background-color: @TransparentColor;
+    font-family:  @EditorFontFamily;
+    font-size: @EditorFontSize;
+  }
+
+  atom-text-editor .cursor {
+    border-color: @CursorColor;
+  }
+
+  .amu-panel-contrast .tree-view {
+    background-color: @TransparentColor;
+  }
+
+  atom-text-editor .gutter {
+    background-color: @TransparentImportantColor;
+    color: @LineNumberColor;
+  }
+
+  atom-text-editor .gutter .line-number.cursor-line {
+    color: @CurrentLineNumberColor;
+  }
+
+  .platformio-ide-terminal .xterm {
+    color: @TerminalColor;
+    ::selection {
+      background-color: ;
+    }
+
+    .terminal-cursor {
+      background-color: ;
+    }
+  }
+
+  .recent-projects-view .project-list li.project-entry {
+    background-color: @RecentProjectBackgroundColor;
+    color: @RecentProjectColor;
+    font-family: @RecentProjectFontFamily;
+  }
+
+  .syntax--entity.syntax--name.syntax--function {
+    color: @MethodColor;
+  }
+
+  .syntax--variable.syntax--other.syntax--module.syntax--js {
+    color: @ImportedVariableColor;
+  }
+
+  .syntax--keyword.syntax--control.syntax--js {
+    color: @KeywordColor;
+  }
+
+  .syntax--variable.syntax--language.syntax--js {
+    color: @LanguageKeywordColor;
+  }
+
+  .syntax--variable.syntax--other.syntax--object.syntax--js {
+    color: @ObjectVariableColor;
+  }
+
+  .syntax--variable.syntax--other.syntax--property.syntax--js {
+    color: @ObjectPropertyColor;
+  }
+
+  .syntax--string.syntax--quoted.syntax--single.syntax--js {
+    color: @PureStringColor;
+  }
+
+  .syntax--string.syntax--quoted.syntax--double.syntax--js {
+    color: @PureStringColor;
+  }
+
+  .syntax--source.syntax--js {
+    color: @KeyOfObjectOrJsxElementColor;
+  }
+
+  .syntax--keyword.syntax--operator.syntax--comparison.syntax--js {
+    color:  @OperatorColor;
+  }
+
+  .syntax--storage.syntax--type.syntax--const.syntax--js {
+  color: @KeywordColor;
+  }
+
+  .tree-view{
+      .list-group li:not(.list-nested-item).status-modified, .list-tree li:not(.list-nested-item).status-modified,
+      .list-group li.list-nested-item.status-modified > .list-item, .list-tree li.list-nested-item.status-modified > .list-item {
+        color: @TreeViewStatusModifiedColor;
+      }
+
+      .list-group li:not(.list-nested-item), .list-tree li:not(.list-nested-item), .list-group li.list-nested-item > .list-item,
+      .list-tree li.list-nested-item > .list-item {
+        color: @TreeViewColor;
+        font-family: @TreeViewFontFamily;
+        font-size: @TreeViewFontSize;
+      }
+
+      li.selected.expanded {
+            .list-group li:not(.list-nested-item), .list-tree li:not(.list-nested-item), .list-group li.list-nested-item > .list-item,
+            .list-tree li.list-nested-item > .list-item {
+              color: @TreeViewSelectedFolderItemsColor;
+            }
+
+            .list-group li:not(.list-nested-item).status-modified, .list-tree li:not(.list-nested-item).status-modified, .list-group
+            li.list-nested-item.status-modified > .list-item, .list-tree li.list-nested-item.status-modified > .list-item {
+              color: @TreeViewStatusModifiedColor;
+            }
+        }
+  }
+  </xmp>
+  </code>
+</pre>
 
 
 		<h2>.NET</h2>
@@ -788,8 +975,6 @@ pup 'div#ftConw json{}' | jq '.[0].children[1].text' > data.json
 
 
 
-
-
 		 <div style="text-align:center;display:block;">
 		 <div style="border-top:1px dashed #cccccc;height: 1px;overflow:hidden;margin:10px;"></div>
  <image height="120px" width="120px" src="../images/payme.png" />
@@ -797,8 +982,6 @@ pup 'div#ftConw json{}' | jq '.[0].children[1].text' > data.json
  <h3 style="color:red;font-weight:bold">If you want to pay for this</br>I will list your account name here.</br> HA HA!</h3>
  </div>
       </section>
-
-
 
       <footer>
 	  <p><small>QQ:<a href="javascript:void(0)">1010267566</a>
