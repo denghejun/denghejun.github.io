@@ -370,9 +370,12 @@ nuget setApiKey <API Key> -Source <Server URL>
 <xmp>
   @TreeViewFontFamily:  Arial !important; // Arial
   @TreeViewFontSize: 15px !important;
-  @TreeViewStatusModifiedColor: rgb(177, 68, 58);
-  @TreeViewColor:  rgba(103, 103, 96, 0.34);
-  @TreeViewSelectedFolderItemsColor: rgba(255, 255, 255, 0.81);
+  @TreeViewStatusModifiedColor:  rgba(233, 28, 83, 0.9);//rgb(177, 68, 58);
+  @TreeViewColor:  rgba(103, 103, 96, 0.93);
+  @TreeViewSelectedFolderItemsColor:   rgba(255, 255, 255, 0.81);
+  @TreeViewAddedFileColor: #8BC34A !important;
+  @TreeViewAddedFileSelectedColor: black !important;
+  @TreeViewFileIconColor: inherit;
 
   @RecentProjectBackgroundColor: rgba(236, 15, 227, 0.66);
   @RecentProjectColor: white;
@@ -484,6 +487,13 @@ nuget setApiKey <API Key> -Source <Server URL>
       .list-group li:not(.list-nested-item).status-modified, .list-tree li:not(.list-nested-item).status-modified,
       .list-group li.list-nested-item.status-modified > .list-item, .list-tree li.list-nested-item.status-modified > .list-item {
         color: @TreeViewStatusModifiedColor;
+        .medium-yellow:before {
+          color: @TreeViewFileIconColor;
+        }
+
+        .medium-orange:before {
+        color: @TreeViewFileIconColor;
+        }
       }
 
       .list-group li:not(.list-nested-item), .list-tree li:not(.list-nested-item), .list-group li.list-nested-item > .list-item,
@@ -502,9 +512,35 @@ nuget setApiKey <API Key> -Source <Server URL>
             .list-group li:not(.list-nested-item).status-modified, .list-tree li:not(.list-nested-item).status-modified, .list-group
             li.list-nested-item.status-modified > .list-item, .list-tree li.list-nested-item.status-modified > .list-item {
               color: @TreeViewStatusModifiedColor;
+              .medium-yellow:before {
+                color: @TreeViewFileIconColor;
+              }
+
+              .medium-orange:before {
+              color: @TreeViewFileIconColor;
+              }
             }
         }
+
+        .list-group li:not(.list-nested-item).status-added, .list-tree li:not(.list-nested-item).status-added, .list-group li.list-nested-item.status-added > .list-item, .list-tree li.list-nested-item.status-added > .list-item {
+          color: @TreeViewAddedFileColor;
+          .medium-yellow:before {
+            color: @TreeViewFileIconColor;
+          }
+
+          .medium-orange:before {
+          color: @TreeViewFileIconColor;
+          }
+        }
   }
+
+  :focus .list-group
+   li:not(.list-nested-item).selected.status-added,
+  :focus .list-tree li:not(.list-nested-item).selected.status-added,
+  :focus .list-group li.list-nested-item.selected > .list-item.status-added,
+  :focus .list-tree li.list-nested-item.selected > .list-item.status-added {
+     color: @TreeViewAddedFileSelectedColor;
+   }
   </xmp>
   </code>
 </pre>
