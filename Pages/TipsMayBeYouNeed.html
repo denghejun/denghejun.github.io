@@ -369,124 +369,163 @@ nuget setApiKey <API Key> -Source <Server URL>
 <code>
 <xmp>
   @TreeViewFontFamily:  Arial !important; // Arial
-  @TreeViewFontSize: 15px !important;
-  @TreeViewStatusModifiedColor:  rgba(233, 28, 83, 0.9);//rgb(177, 68, 58);
-  @TreeViewColor:  rgba(103, 103, 96, 0.93);
-  @TreeViewSelectedFolderItemsColor:   rgba(255, 255, 255, 0.81);
-  @TreeViewAddedFileColor: #8BC34A !important;
-  @TreeViewAddedFileSelectedColor: black !important;
-  @TreeViewFileIconColor: inherit;
+@TreeViewFontSize: 15px !important;
+@TreeViewStatusModifiedColor:  rgba(233, 28, 83, 0.9);//rgb(177, 68, 58);
+@TreeViewColor:  rgba(103, 103, 96, 0.93);
+@TreeViewSelectedFolderItemsColor:   rgba(255, 255, 255, 0.81);
+@TreeViewAddedFileColor: #8BC34A !important;
+@TreeViewAddedFileSelectedColor: black !important;
+@TreeViewFileIconColor: inherit;
 
-  @RecentProjectBackgroundColor: rgba(236, 15, 227, 0.66);
-  @RecentProjectColor: white;
-  @RecentProjectFontFamily: fantasy;
+@RecentProjectBackgroundColor: rgba(236, 15, 227, 0.66);
+@RecentProjectColor: white;
+@RecentProjectFontFamily: fantasy;
 
-  @EditorFontFamily:  fantasy !important; // "Helvetica Neue"
-  @EditorFontSize: 14px !important;
-  @TransparentColor: transparent;
-  @TransparentImportantColor: transparent !important;
-  @KeyOfObjectOrJsxElementColor: orange;
-  @CursorColor: yellow;
-  @LineNumberColor: rgb(126, 255, 37);
-  @CurrentLineNumberColor: rgb(236, 17, 161);
-  @TerminalColor: orange;
-  @MethodColor: rgb(82, 192, 233);
-  @ImportedVariableColor: #ccc;
-  @KeywordColor: rgba(236, 72, 131, 0.9);
-  @LanguageKeywordColor: rgba(236, 72, 131, 0.9);
-  @ObjectVariableColor: #ccc;
-  @ObjectPropertyColor: #ccc;
-  @PureStringColor: rgba(254, 254, 254, 0.47);
-  @OperatorColor: orange;
+@EditorFontFamily:  fantasy !important; // "Helvetica Neue"
+@EditorFontSize: 14px !important;
+@TransparentColor: transparent;
+@TransparentImportantColor: transparent !important;
+@KeyOfObjectOrJsxElementColor: orange;
+@CursorColor: yellow;
+@LineNumberColor: red;
+@CurrentLineNumberColor: rgb(236, 17, 161);
+@TerminalColor: orange;
+@MethodColor: rgb(82, 192, 233);
+@ImportedVariableColor: #ccc;
+@KeywordColor: rgba(236, 72, 131, 0.9);
+@LanguageKeywordColor: rgba(236, 72, 131, 0.9);
+@ObjectVariableColor: #ccc;
+@ObjectPropertyColor: #ccc;
+@PureStringColor: rgba(254, 254, 254, 0.47);
+@OperatorColor: orange;
+@MethodCallColor: rgba(235, 75, 171, 1);
+@MethodDefineColor: orange;
 
-  atom-text-editor {
-    background-color: @TransparentColor;
-    font-family:  @EditorFontFamily;
-    font-size: @EditorFontSize;
+atom-text-editor {
+  background-color: @TransparentColor;
+  font-family:  @EditorFontFamily;
+  font-size: @EditorFontSize;
+}
+
+atom-text-editor .cursor {
+  border-color: @CursorColor;
+}
+
+.amu-panel-contrast .tree-view {
+  background-color: @TransparentColor;
+}
+
+atom-text-editor .gutter {
+  background-color: @TransparentImportantColor;
+  color: @LineNumberColor;
+}
+
+atom-text-editor .gutter .line-number.cursor-line {
+  color: @CurrentLineNumberColor;
+}
+
+.platformio-ide-terminal .xterm {
+  color: @TerminalColor;
+  ::selection {
+    background-color: ;
   }
 
-  atom-text-editor .cursor {
-    border-color: @CursorColor;
+  .terminal-cursor {
+    background-color: ;
   }
+}
 
-  .amu-panel-contrast .tree-view {
-    background-color: @TransparentColor;
-  }
+.recent-projects-view .project-list li.project-entry {
+  background-color: @RecentProjectBackgroundColor;
+  color: @RecentProjectColor;
+  font-family: @RecentProjectFontFamily;
+}
 
-  atom-text-editor .gutter {
-    background-color: @TransparentImportantColor;
-    color: @LineNumberColor;
-  }
+.syntax--entity.syntax--name.syntax--function {
+  color: @MethodColor;
+}
 
-  atom-text-editor .gutter .line-number.cursor-line {
-    color: @CurrentLineNumberColor;
-  }
+.syntax--variable.syntax--other.syntax--module.syntax--js {
+  color: @ImportedVariableColor;
+}
 
-  .platformio-ide-terminal .xterm {
-    color: @TerminalColor;
-    ::selection {
-      background-color: ;
-    }
-
-    .terminal-cursor {
-      background-color: ;
-    }
-  }
-
-  .recent-projects-view .project-list li.project-entry {
-    background-color: @RecentProjectBackgroundColor;
-    color: @RecentProjectColor;
-    font-family: @RecentProjectFontFamily;
-  }
-
-  .syntax--entity.syntax--name.syntax--function {
-    color: @MethodColor;
-  }
-
-  .syntax--variable.syntax--other.syntax--module.syntax--js {
-    color: @ImportedVariableColor;
-  }
-
-  .syntax--keyword.syntax--control.syntax--js {
-    color: @KeywordColor;
-  }
-
-  .syntax--variable.syntax--language.syntax--js {
-    color: @LanguageKeywordColor;
-  }
-
-  .syntax--variable.syntax--other.syntax--object.syntax--js {
-    color: @ObjectVariableColor;
-  }
-
-  .syntax--variable.syntax--other.syntax--property.syntax--js {
-    color: @ObjectPropertyColor;
-  }
-
-  .syntax--string.syntax--quoted.syntax--single.syntax--js {
-    color: @PureStringColor;
-  }
-
-  .syntax--string.syntax--quoted.syntax--double.syntax--js {
-    color: @PureStringColor;
-  }
-
-  .syntax--source.syntax--js {
-    color: @KeyOfObjectOrJsxElementColor;
-  }
-
-  .syntax--keyword.syntax--operator.syntax--comparison.syntax--js {
-    color:  @OperatorColor;
-  }
-
-  .syntax--storage.syntax--type.syntax--const.syntax--js {
+.syntax--keyword.syntax--control.syntax--js {
   color: @KeywordColor;
-  }
+}
 
-  .tree-view{
-      .list-group li:not(.list-nested-item).status-modified, .list-tree li:not(.list-nested-item).status-modified,
-      .list-group li.list-nested-item.status-modified > .list-item, .list-tree li.list-nested-item.status-modified > .list-item {
-        color: @TreeViewStatusModifiedColor;
+.syntax--variable.syntax--language.syntax--js {
+  color: @LanguageKeywordColor;
+}
+
+.syntax--variable.syntax--other.syntax--object.syntax--js {
+  color: @ObjectVariableColor;
+}
+
+.syntax--variable.syntax--other.syntax--property.syntax--js {
+  color: @ObjectPropertyColor;
+}
+
+.syntax--string.syntax--quoted.syntax--single.syntax--js {
+  color: @PureStringColor;
+}
+
+.syntax--string.syntax--quoted.syntax--double.syntax--js {
+  color: @PureStringColor;
+}
+
+.syntax--source.syntax--js {
+  color: @KeyOfObjectOrJsxElementColor;
+}
+
+.syntax--keyword.syntax--operator.syntax--comparison.syntax--js {
+  color:  @OperatorColor;
+}
+
+.syntax--storage.syntax--type.syntax--const.syntax--js {
+color: @KeywordColor;
+}
+
+.tree-view{
+    .list-group li:not(.list-nested-item).status-modified, .list-tree li:not(.list-nested-item).status-modified,
+    .list-group li.list-nested-item.status-modified > .list-item, .list-tree li.list-nested-item.status-modified > .list-item {
+      color: @TreeViewStatusModifiedColor;
+      .medium-yellow:before {
+        color: @TreeViewFileIconColor;
+      }
+
+      .medium-orange:before {
+      color: @TreeViewFileIconColor;
+      }
+    }
+
+    .list-group li:not(.list-nested-item), .list-tree li:not(.list-nested-item), .list-group li.list-nested-item > .list-item,
+    .list-tree li.list-nested-item > .list-item {
+      color: @TreeViewColor;
+      font-family: @TreeViewFontFamily;
+      font-size: @TreeViewFontSize;
+    }
+
+    li.selected.expanded {
+          .list-group li:not(.list-nested-item), .list-tree li:not(.list-nested-item), .list-group li.list-nested-item > .list-item,
+          .list-tree li.list-nested-item > .list-item {
+            color: @TreeViewSelectedFolderItemsColor;
+          }
+
+          .list-group li:not(.list-nested-item).status-modified, .list-tree li:not(.list-nested-item).status-modified, .list-group
+          li.list-nested-item.status-modified > .list-item, .list-tree li.list-nested-item.status-modified > .list-item {
+            color: @TreeViewStatusModifiedColor;
+            .medium-yellow:before {
+              color: @TreeViewFileIconColor;
+            }
+
+            .medium-orange:before {
+            color: @TreeViewFileIconColor;
+            }
+          }
+      }
+
+      .list-group li:not(.list-nested-item).status-added, .list-tree li:not(.list-nested-item).status-added, .list-group li.list-nested-item.status-added > .list-item, .list-tree li.list-nested-item.status-added > .list-item {
+        color: @TreeViewAddedFileColor;
         .medium-yellow:before {
           color: @TreeViewFileIconColor;
         }
@@ -495,52 +534,35 @@ nuget setApiKey <API Key> -Source <Server URL>
         color: @TreeViewFileIconColor;
         }
       }
+}
 
-      .list-group li:not(.list-nested-item), .list-tree li:not(.list-nested-item), .list-group li.list-nested-item > .list-item,
-      .list-tree li.list-nested-item > .list-item {
-        color: @TreeViewColor;
-        font-family: @TreeViewFontFamily;
-        font-size: @TreeViewFontSize;
-      }
+:focus .list-group
+ li:not(.list-nested-item).selected.status-added,
+:focus .list-tree li:not(.list-nested-item).selected.status-added,
+:focus .list-group li.list-nested-item.selected > .list-item.status-added,
+:focus .list-tree li.list-nested-item.selected > .list-item.status-added {
+   color: @TreeViewAddedFileSelectedColor;
+ }
 
-      li.selected.expanded {
-            .list-group li:not(.list-nested-item), .list-tree li:not(.list-nested-item), .list-group li.list-nested-item > .list-item,
-            .list-tree li.list-nested-item > .list-item {
-              color: @TreeViewSelectedFolderItemsColor;
-            }
+ .syntax--meta.syntax--method-call, .syntax--meta.syntax--method {
+   color: @MethodCallColor;
+ }
 
-            .list-group li:not(.list-nested-item).status-modified, .list-tree li:not(.list-nested-item).status-modified, .list-group
-            li.list-nested-item.status-modified > .list-item, .list-tree li.list-nested-item.status-modified > .list-item {
-              color: @TreeViewStatusModifiedColor;
-              .medium-yellow:before {
-                color: @TreeViewFileIconColor;
-              }
+.syntax--round {
+  color: @MethodDefineColor ;
+}
 
-              .medium-orange:before {
-              color: @TreeViewFileIconColor;
-              }
-            }
-        }
+.syntax--punctuation.syntax--definition.syntax--parameters, .syntax--punctuation.syntax--definition.syntax--array {
+  color: @MethodDefineColor;
+}
 
-        .list-group li:not(.list-nested-item).status-added, .list-tree li:not(.list-nested-item).status-added, .list-group li.list-nested-item.status-added > .list-item, .list-tree li.list-nested-item.status-added > .list-item {
-          color: @TreeViewAddedFileColor;
-          .medium-yellow:before {
-            color: @TreeViewFileIconColor;
-          }
+.syntax--storage.syntax--modifier.syntax--js {
+  color: @KeywordColor;
+}
 
-          .medium-orange:before {
-          color: @TreeViewFileIconColor;
-          }
-        }
-  }
-
-  :focus .list-group
-   li:not(.list-nested-item).selected.status-added,
-  :focus .list-tree li:not(.list-nested-item).selected.status-added,
-  :focus .list-group li.list-nested-item.selected > .list-item.status-added,
-  :focus .list-tree li.list-nested-item.selected > .list-item.status-added {
-     color: @TreeViewAddedFileSelectedColor;
-   }
+.syntax--storage.syntax--type.syntax--class.syntax--js {
+  color: @KeywordColor;
+}
   </xmp>
   </code>
 </pre>
