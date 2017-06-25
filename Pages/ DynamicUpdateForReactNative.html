@@ -59,6 +59,58 @@
 快速的 follow 一遍，你会发现它如此的简单迷人。
 		</p>
     <p>
+仿佛你要做的就是下面这样：
+<pre><code>
+  
+import { AppRegistry } from 'react-native'
+import Cache from 'react-native-cache-store'
+import Root from '../components/router/_index'
+import Services from '../services/_index'
+import codePush from 'react-native-code-push'
+
+export default class BootStrapper {
+  static init() {
+    Cache.flush()
+  }
+
+  static launch() {
+    const app = codePush(BootStrapper.getCodePushOption())(Root)
+    AppRegistry.registerComponent('CNewApp', () => app)
+  }
+
+  static start() {
+    Promise.resolve()
+      .then(() => {
+        return BootStrapper.init()
+      })
+      .then(() => {
+        BootStrapper.launch()
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
+  static getCodePushOption() {
+    return {
+      updateDialog: {
+        appendReleaseDescription: true,
+        descriptionPrefix: 'Release Note: ',
+        mandatoryContinueButtonLabel: '好',
+        title: '更新',
+        optionalUpdateMessage: '发现可用更新，是否立即更新？\r\n',
+        mandatoryUpdateMessage: '发现可用更新，建议立即更新。\r\n',
+        optionalIgnoreButtonLabel: '不了，谢谢',
+        optionalInstallButtonLabel: '安装更新'
+      },
+      installMode: codePush.InstallMode.IMMEDIATE
+    }
+  }
+}
+</code></pre>
+		</p>
+
+    <p>
 我假设你足够的聪明，已经很好的完成了官方的 follow。接下来，我想分享我使用 code push 的进行release 的一个大致流程。我以我<a href="./FilmNightIosAppReactNative.html" target="_blank">上一篇</a>
 中的 FilmNight App 为例。
 		</p>
