@@ -1,0 +1,200 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Dynamic Update For React Native</title>
+	<link rel="shortcut icon" type="image/x-icon" href="../images/logo.ico" />
+    <link rel="stylesheet" href="../stylesheets/styles.css">
+    <link rel="stylesheet" href="../stylesheets/github-dark.css">
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>-->
+    <script src="../javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+	  <!-- title here -->
+        <h1>Dynamic Update For React Native</h1>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+        <a href="https://github.com/denghejun/CNew" class="button fork"><strong>View On GitHub</strong></a>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+	<nav>
+        <ul></ul>
+		<a href='../index.html'>Back Home</a>
+      </nav>
+      <section>
+	  <image height="200px" width="100%" src="../images/dynamic-update/codePush.png"></image>
+	  <hr/>
+
+        <!-- blog content here -->
+		<h2>热更新的可行性</h2>
+		<p>
+对于 React Native 开发的 App 来讲，其内容包含两个方面：
+		</p>
+		<ul>
+			<li>JavaScript 脚本</li>
+			<li>图片、音乐、视频等静态资源</li>
+		</ul>
+    <p>
+    我们假设应用程序的入口 (entry) 脚本是 index.ios.js，那么，通过这个入口文件，Packager 可以将所有的脚本文件、静态资源打包成一个 bundle，然后应用程序
+  下载本地或远端的这个打包后的 bundle 文件来启动。那么，可想而知，如果我们将每次修改后并打包的新的 bundle 文件托管到远端 server，设定一个策略：
+  每当 App 终端用户重启应用时，我们就检查远端 server 是否有一个新版本的 bundle 包，如果有，则提示用户检测到更新，询问是否更新，并且可以将每次的
+  release note 通过远端 server 返回一并显示给用户，并告知更新的内容。所以，一旦你理解了热更新的基本原理，几乎可以向你的终端用户在任何时间推送任何信息。
+</p>
+<p>
+  <video width="100%" controls>
+    <source src="../images/dynamic-update/update-ios.mp4" type="video/mp4">
+  您的浏览器不支持 video 标签。
+  </video>
+</p>
+
+    <h2>Code Push</h2>
+		<p>
+它是 Microsoft 在 git hub 上托管的一个开源项目，专注于处理 App 动态更新，对 React Native 有很好的支持。如果你已经有一个完成的 React Native 的应用，并且
+你知道热更新的重要性，那么你可以依照 <a href="http://microsoft.github.io/code-push/" target="_blank">Code Push</a> 的 <a href="https://github.com/Microsoft/react-native-code-push#getting-started" target="_blank">get start</a> 章节
+快速的 follow 一遍，你会发现它如此的简单迷人。
+		</p>
+    <p>
+仿佛你要做的就是下面这样：
+<pre><code>
+
+import { AppRegistry } from 'react-native'
+import Cache from 'react-native-cache-store'
+import Root from '../components/router/_index'
+import Services from '../services/_index'
+import codePush from 'react-native-code-push'
+
+export default class BootStrapper {
+  static init() {
+    Cache.flush()
+  }
+
+  static launch() {
+    const app = codePush(BootStrapper.getCodePushOption())(Root)
+    AppRegistry.registerComponent('CNewApp', () => app)
+  }
+
+  static start() {
+    Promise.resolve()
+      .then(() => {
+        return BootStrapper.init()
+      })
+      .then(() => {
+        BootStrapper.launch()
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
+  static getCodePushOption() {
+    return {
+      updateDialog: {
+        appendReleaseDescription: true,
+        descriptionPrefix: 'Release Note: ',
+        mandatoryContinueButtonLabel: '好',
+        title: '更新',
+        optionalUpdateMessage: '发现可用更新，是否立即更新？\r\n',
+        mandatoryUpdateMessage: '发现可用更新，建议立即更新。\r\n',
+        optionalIgnoreButtonLabel: '不了，谢谢',
+        optionalInstallButtonLabel: '安装更新'
+      },
+      installMode: codePush.InstallMode.IMMEDIATE
+    }
+  }
+}
+</code></pre>
+		</p>
+
+    <p>
+我假设你足够的聪明，已经很好的完成了官方的 follow。接下来，我想分享我使用 code push 的进行release 的一个大致流程。我以我<a href="./FilmNightIosAppReactNative.html" target="_blank">上一篇</a>
+中的 FilmNight App 为例。
+		</p>
+
+首先，App 的生存环境有三种:
+ <ul>
+      <li>Dev</li>
+      <li>Staging</li>
+      <li>Production</li>
+    </ul>
+
+它们分别从以下三个位置下载bundle文件：
+		<ul>
+			<li>一般是指定的本地端口获取 bundle 包</li>
+			<li>从code push server 获取对应 App 的 Staging 环境的 bundle 包</li>
+			<li>从code push server 获取对应 App 的 Production 环境的 bundle 包</li>
+		</ul>
+
+    <p>
+我已经在code push托管了一个名叫 FilmNight 的 IOS App，每当我修改了本地的任何文件，我会执行以下命令先将其 release 到 Staging 环境：
+    </p>
+    <pre><code>
+code-push release-react FilmNight ios  --description "release to
+ Staging env first."
+    </code></pre>
+    <p>
+接下来通过以下命令检查更新是否已经成功上传到 code push server：
+<pre><code>
+code-push deployment ls FilmNight
+</code></pre>
+<image height="200px" width="100%" src="../images/dynamic-update/ls.png"></image>
+		</p>
+
+    <p>
+  然后，在我之前已经安装过一个 Staging 版本的 IOS 设备上进行验证测试；而真正的用户所安装的版本一定是 Production，所以，当你 release to Staging 时，
+  Production 的用户并不会收到一个更新的推送。当你在 Staging 测试通过后，可以通过以下命令，将这个 Staging 的版本 Promote (提升) 到 Production：
+  <pre><code>
+  code-push promote FilmNight Staging Production
+  </code></pre>
+接下来，你可以用上一步骤中所用到的相同命令 check production 的版本是否已经提升。
+<image height="200px" width="100%" src="../images/dynamic-update/pr.png"></image>
+    </p>
+      <p>
+当我们打开已经装有 Production 版本的 FilmNight App 时，将会立即收到一个弹窗提示有可用的更新，并且我将更新说明也放在了提示信息里（这是可选的），
+当用户选择安装后，会立即从 code push server 下载 Production 版本的更新包，当更新完成后会自动重启应用。而在 code push server 端也会记录 Install 的次数。
+<image height="200px" width="100%" src="../images/dynamic-update/pi.png"></image>
+  </p>
+
+    <h2>其他</h2>
+		<p>
+code push 的内容远不止这些，比如它还有许多的更新策略可选，甚至你可以组合：比如完全静默更新、弹窗更新等等；其推送更新也可以限定范围，比如只推送
+50%的用户等等。你可以从  <a href="http://microsoft.github.io/code-push/" target="_blank">Code Push</a> 获取最新的相关信息。
+		</p>
+
+
+		 <div style="text-align:center;display:block;">
+		 <div style="border-top:1px dashed #cccccc;height: 1px;overflow:hidden;margin:10px;"></div>
+ <image height="120px" width="120px" src="../images/payme.png" />
+ <h4 style="color:orange;font-weight:bold">(打赏)</h4>
+ <h3 style="color:red;font-weight:bold">If you want to pay for this</br>I will list your account name here.</br> HA HA!</h3>
+ </div>
+      </section>
+
+
+      <footer>
+	  <p><small>QQ:<a href="javascript:void(0)">1010267566</a>
+		Email:<a href="mailto:denghejun@live.cn?subject=About%20Leo's%20Github%20Pages&body=Anything%20you%20want%20to%20say%20here%20...">denghejun@live.cn</a>
+
+		<br/>Hosted on GitHub Pages <br/>&mdash;<a href="https://denghejun.github.io">leo deng</a></small></p>
+		<p>
+		<small>
+		作者：Leo
+ <br/>出处：<a href="http://denghejun.github.io">http://denghejun.github.io</a>
+ 本文版权归作者所有<br/>转载请声明作者及来源!
+ </small>
+		</p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+  </body>
+</html>
