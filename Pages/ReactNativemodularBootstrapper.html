@@ -87,18 +87,18 @@
       <pre><code><xmp>
 import { AppBootstrapper } from 'react-native-modular-bootstrapper'
 import { App } from './App.tsx'
-    
+
 AppBootstrapper.startup(App); // 'App' will be your root view of react native component
   </xmp></code></pre> And then you can call any service anywhere. e.g:
 
       <pre><code><xmp>
 import { Container } from 'react-native-modular-bootstrapper'
 import { CalculatorService, LOCATOR_CALCULATOR } from './calculator-service-interface'
-    
+
 const a = 100, b = 200;
 const service = Container.get<CalculatorService>(LOCATOR_CALCULATOR.CALCULATOR);
 const result = service.add(a, b); // 'result' will be 300
-    
+
   </xmp></code></pre>
 
       <h2> Install</h2>
@@ -155,7 +155,7 @@ export class SimpleCalculatorService implements CalculatorService {
     return a + b;
   }
 }
-    
+
   </xmp></code></pre>
 
       <h4> 2.Define Your Modules</h4>
@@ -180,7 +180,7 @@ export class ServicesModule implements ServiceContract.Module {
     // continue to bind other services here if you want ... ...
   }
 }
-    
+
   </xmp></code></pre>
 
       <h4> 3.Define Your Module Provider Configuration </h4>
@@ -199,7 +199,7 @@ export default class AppModuleProvider implements ServiceContract.ModuleProvider
     return [ServicesModule]; // this is an array of all your modules.
   }
 }
-    
+
   </xmp></code></pre>
 
       <h4> 4.Use it</h4>
@@ -211,7 +211,7 @@ import { AppBootstrapper } from 'react-native-modular-bootstrapper'
 import { App } from './App.tsx'
 
 AppBootstrapper.startup(App); // 'App' will be your root view of react native component
-    
+
   </xmp></code></pre> And then you can call any service anywhere. e.g:
 
       <pre><code><xmp>
@@ -221,7 +221,7 @@ import { CalculatorService, LOCATOR_CALCULATOR } from './calculator-service-inte
 const a = 100, b = 200;
 const service = Container.get<CalculatorService>(LOCATOR_CALCULATOR.CALCULATOR);
 const result = service.add(a, b); // 'result' will be 300
-    
+
   </xmp></code></pre>
 
       <h2>Extra</h2>
@@ -249,7 +249,7 @@ it('[calculator-service : 01] should get right result 300.', async () => {
   // then
   expect(result).toBe(300);
 })
-    
+
   </xmp></code></pre>
 
 
