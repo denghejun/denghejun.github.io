@@ -29,10 +29,10 @@
       </div><!-- end banner -->
 
     <div class="wrapper">
-	<nav> 
+	<nav>
         <ul></ul>
 		<a href='../index.html'>Back Home</a>
-      </nav> 
+      </nav>
       <section>
 	  <image height="200px" width="100%" src="../images/33kmm0019rm.jpg"></image>
 	  <hr/>
@@ -53,9 +53,9 @@
 		<p>
 		总之，在我眼中总有那么几家IT公司是必须要去看看的，而你选择它的理由往往就那么简单！
 		</p>
-		
-		
-		
+
+
+
 		<h2>Merchant's Guide To The Galaxy  </h2>
 		<p>
 		我承认我并不是很喜欢对一个问题进行反复的描述，那么我们就简单来看下`Merchant's Guide To The Galaxy(商人银河系指南)`原始需求的一小部分：
@@ -92,10 +92,10 @@ I have no idea what you are talking about
 			<li>必须提供支持从文件输入的接口 </li>
 		</ul>
 		<p>
-		在我们开始讨论它之前，我想你已确保你全部理解了`Sample`中的每一行描述，因为我并不打算再为你翻译一遍了，如果你也很懒，也可以`Google it`。
+		在我们开始讨论它之前，我想你已确保你全部理解了`Sample`中的每一行描述，因为我并不打算再为你翻译一遍。
 		</p>
-		
-		
+
+
 		<h2>这是什么   </h2>
 		<p>
 		一开始，我也是这么认为的：
@@ -114,7 +114,7 @@ I have no idea what you are talking about
 			<li>罗马数字应是一个专业的领域系统，需要提供计算和转换的标准接口，应该将它设计成一种公共资源，甚至与本需求无关；</li>
 			<li>支持从文件输入和控制台输入，实际上为了接口的统一，理论上应该把从控制台输入的数据也缓存到临时文件，这样系统的入口单一，接口的调用方会觉得更加舒适。</li>
 		</ul>
-		
+
 		<p>认清问题本质，并在编码前就理清思路往往事半功倍，并会增强编码自信。如果你还信仰`TDD`模式，那么就更棒了。
 		</p>
 		<h2>问题本质与抉择    </h2>
@@ -159,7 +159,7 @@ I have no idea what you are talking about
 		<p>
 		若要保存在内存中，那么请将各个类型的输入设计成一个一个的小指令系统，各自对指令数据进行识别、计算和保存的处理。并提供对外API支援。
 		</p>
-		
+
 		<h4>罗马数字资源系统</h4>
 		<p>
 		让我们尽可能的简单化地考虑这个问题，它与用户指令根本无关，甚至它本身并不该是一个问题如果有标准的国际支持的话。好吧，没有办法，我们得自己来造这个汽车轮子。我希望看到的罗马数字资源是这样的
@@ -375,7 +375,7 @@ public class AliasCommandDirective : CommandDirective<AliasCommand>
 	}
 }
 		</xmp></code></pre>
-		
+
 		<p>
 		事实上，当我们拥有了大量成型的指令后，应该在何时何地调用正确的指令处理用户输入呢？显然，这是一个策略问题。于是，我们针对这种场景设计一个标准的策略接口ICommandStrategy：
 		</p>
@@ -386,7 +386,7 @@ public interface ICommandStrategy
 	GuideResponse Execute(string content);
 }
 		</xmp></code></pre>
-		
+
 		接下来，我们要为每个Directive实现自己的策略，以下是一个`AliasCommandStrategy`的范例
 		<pre><code><xmp>
 public class AliasCommandStrategy : ICommandStrategy
@@ -426,7 +426,7 @@ private static GuideResponse Solve(string content)
 		<li>用户会输入：xxx（具体我忘记了） is I：意思是给罗马数字换一种别名</li>
 		<li>用户会输入：How many Silvers is glob glob Gold？：意思是glob glob个金子是多少银？</li>
 		</ul>
-		
+
 		<p>显然，基于目前的设计，完全支持这两种新特性。</p>
 		<h2>完善客户端用户体验      </h2>
 		<p>
@@ -442,10 +442,10 @@ private static GuideResponse Solve(string content)
 -------------------------------------------------------------
 |2
 		</xmp></code></pre>
-		
+
 		<pre><code><xmp>
 
-		
+
 Please input data directly in console, and Press 'Enter' twice to execute.
 -------------------------------------------------------------
 glob is I
@@ -469,19 +469,19 @@ I have no idea what you are talking about
 
 Press any key to continue ...
 .............................................................
-|	
+|
 </xmp></code></pre>
 		<pre><code><xmp>
 Are you sure to exit [y/n] ?
 -------------------------------------------------------------
-y|	
+y|
 		</xmp></code></pre>
 		</p>
 		<h2>总是将代码放到安全的地方       </h2>
 		<p>
 		建议总是把代码`push`到任何你喜欢的任何方式托管的`Repository`，因为我总觉得把代码存储到我单机的电脑磁盘中会不保险，也不便于回顾。
 		</p>
-		
+
 
 		 <div style="text-align:center;display:block;">
 		 <div style="border-top:1px dashed #cccccc;height: 1px;overflow:hidden;margin:10px;"></div>
@@ -490,12 +490,12 @@ y|
  <h3 style="color:red;font-weight:bold">If you want to pay for this</br>I will list your account name here.</br> HA HA!</h3>
  </div>
       </section>
-	  
-	  
+
+
       <footer>
 	  <p><small>QQ:<a href="javascript:void(0)">1010267566</a>
 		Email:<a href="mailto:denghejun@live.cn?subject=About%20Leo's%20Github%20Pages&body=Anything%20you%20want%20to%20say%20here%20...">denghejun@live.cn</a>
-		
+
 		<br/>Hosted on GitHub Pages <br/>&mdash;<a href="https://denghejun.github.io">colorfulwindmill</a></small></p>
 		<p>
 		<small>
