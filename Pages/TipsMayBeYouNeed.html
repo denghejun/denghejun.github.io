@@ -133,7 +133,7 @@ git push origin master
         则修改.gitignore是无效的。所以需要删除暂存区让其un-track：</li>
       <pre><code>
 cd your_project_folder
-git rm -r --cached  // 或者: git rm -r --cached ignore_file
+git rm -r --cached .  // 或者: git rm -r --cached ignore_file
 git add -A
 git commit -m 'new commit'
 git push origin master
