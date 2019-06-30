@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Cycle Runner Proxy</title>
+    <title>Circle Runner Proxy</title>
 	<link rel="shortcut icon" type="image/x-icon" href="../images/logo.ico" />
     <link rel="stylesheet" href="../stylesheets/styles.css">
     <link rel="stylesheet" href="../stylesheets/github-dark.css">
@@ -19,7 +19,7 @@
 
       <header>
 	  <!-- title here -->
-        <h1>Cycle Runner Proxy</h1>
+        <h1>Circle Runner Proxy</h1>
       </header>
 
       <div id="banner">
@@ -28,15 +28,15 @@
       </div><!-- end banner -->
 
     <div class="wrapper">
-	<nav> 
+	<nav>
         <ul></ul>
 		<a href='../index.html'>Back Home</a>
-      </nav> 
+      </nav>
       <section>
 	  <image height="200px" width="100%" src="../images/144-1151.jpg"></image>
 	   <hr/>
         <!-- blog content here -->
-		<h2> Cycle Runner Concept</h2>
+		<h2> Circle Runner Concept</h2>
 		<p>
 		Runner是自己想象出来的概念，是最近做完这个组件后才决定的名字。按字面理解为“信息携带者”、“通讯兵”、“赛跑者”。为了更让它贴合软件开发的主题，我命名为“运行器”。所以，“Runner Proxy”就可以称之为“运行器代理”。
 		</p>
@@ -44,10 +44,10 @@
 		顾名思义，运行器代理能帮助你执行普通的方法（Method），同时为你提供辅助目标方法的“环绕功能”。之所以称之为“环绕功能”，是因为就代码结构上来看，所有的功能像是围绕着目标函数（Target Method）创建了一层一层的“环”，环状结构能让组件享有不同的层级的功能，比如，最外层的环享有所有里层环实现的功能，最里层的环仅仅享有自己的那一部分。所以，可以称之为“环状运行器代理”或“环形运行器”。
 		</p>
         <p>
-        环状设计亦可称之为“Service Cycles”,在环上聚集了无数的点，称之为“Service Points”，所以环是无数服务对象的聚集的表现，是对服务进行分级设定，是逐步完善系统的良好方案。
+        环状设计亦可称之为“Service Circles”,在环上聚集了无数的点，称之为“Service Points”，所以环是无数服务对象的聚集的表现，是对服务进行分级设定，是逐步完善系统的良好方案。
         </p>
-        
-        <h2>  First Service Cycle: Infrastructure</h2>
+
+        <h2>  First Service Circle: Infrastructure</h2>
         <p>Runner Proxy 的首环是基础设施环，提供一些基本的辅助支撑，尽量减少调用者对方法的依赖程度，尽量减少调用者减少对一般性要求的代码的重复编写。目前这一环提供的调用支撑主要有以下几点：</p>
         <small>
         <ul>
@@ -56,43 +56,43 @@
         </ul>
         </small>
         <p>
-        显而易见，Infrastructure Service Cycle正如我们想象中的那样，做好一些Basic Jobs，以待支持更高阶的Service Cycle。所以，在以后要追加某一功能时，要识别它是隶属于哪一环。有一个很方便的原则来区分Infrastructure Cycle与高阶Service Cycle：如果某一Service提供的功能不依赖与其它任何Service Cycle，它就是Infrastructure Cycle Service。
+        显而易见，Infrastructure Service Circle正如我们想象中的那样，做好一些Basic Jobs，以待支持更高阶的Service Circle。所以，在以后要追加某一功能时，要识别它是隶属于哪一环。有一个很方便的原则来区分Infrastructure Circle与高阶Service Circle：如果某一Service提供的功能不依赖与其它任何Service Circle，它就是Infrastructure Circle Service。
         </p>
-        
-        
-        <h2>   Second Service Cycle: Improve</h2>
+
+
+        <h2>   Second Service Circle: Improve</h2>
         <p>
-        Improve Cycle 提供一些进阶的、健壮的支持，它处于 Infrastructure Cycle的邻接外层，对于Infrastructure Cycle提供的所有功能来讲是透明的、清晰的。当然，为了实现一些更为丰富的功能，你完全可以利用Infrastructure Cycle的天然优势进行任意的组装；但同时别偏移了方向，作为独成的一环，其必具备唯本环独有的特性支撑。在Runner Proxy中的Improving Cycle只实现了以下几个特性：
+        Improve Circle 提供一些进阶的、健壮的支持，它处于 Infrastructure Circle的邻接外层，对于Infrastructure Circle提供的所有功能来讲是透明的、清晰的。当然，为了实现一些更为丰富的功能，你完全可以利用Infrastructure Circle的天然优势进行任意的组装；但同时别偏移了方向，作为独成的一环，其必具备唯本环独有的特性支撑。在Runner Proxy中的Improving Circle只实现了以下几个特性：
         </p>
         <small>
         <ul>
         <li>提供方法失败（显示的失败或异常失败）时按指定重试次数进行同步重试，直至耗尽重试机会。（失败的判决条件可自定义Callback）</li>
-        <li>利用Infrastructure Cycle提供的Mail Service进行了邮件发送内容的填补（Mail Content默认是调用方法时的上下文信息，包括Method Name、Assembly Name、Parameter Values、Exception），追加了重试信息上下文相关的内容（所有的Mail Content可以由callback让用户自定义）。</li>
+        <li>利用Infrastructure Circle提供的Mail Service进行了邮件发送内容的填补（Mail Content默认是调用方法时的上下文信息，包括Method Name、Assembly Name、Parameter Values、Exception），追加了重试信息上下文相关的内容（所有的Mail Content可以由callback让用户自定义）。</li>
         </ul>
         </small>
-        
-        <p>可见，作为Infrastructure Cycle的邻接高阶环，它即利用并组合了Infrastructure Cycle Service的某些功能，又实现了自己的核心价值之一：重试机制。</p>
-        
-        
-        <h2>    Third Service Cycle: Advance</h2>
+
+        <p>可见，作为Infrastructure Circle的邻接高阶环，它即利用并组合了Infrastructure Circle Service的某些功能，又实现了自己的核心价值之一：重试机制。</p>
+
+
+        <h2>    Third Service Circle: Advance</h2>
         <p>
-        Advance Cycle聚集了更为先进、复杂的服务对象，能提供各种各样的高级支撑，能依托低阶环服务完成一些更为“伟大”、更具“价值”的一些功能。在不出意外的情况下，该层将是当前组件最有价值和最具技术体现的一环，也最能体现当前组件的核心价值。
+        Advance Circle聚集了更为先进、复杂的服务对象，能提供各种各样的高级支撑，能依托低阶环服务完成一些更为“伟大”、更具“价值”的一些功能。在不出意外的情况下，该层将是当前组件最有价值和最具技术体现的一环，也最能体现当前组件的核心价值。
         </p>
         <p>在Runner Proxy中，本环提供了以下一些高阶功能：</p>
        <small>
         <ul>
-        <li>依托于Improve Cycle Service的重试机制，在耗尽重试次数后，转至本地缓存Current Execute Context Info到文件，后台持续重试的选项</li>
+        <li>依托于Improve Circle Service的重试机制，在耗尽重试次数后，转至本地缓存Current Execute Context Info到文件，后台持续重试的选项</li>
         <li>提供了按天记录/创建缓存文件</li>
         <li>提供了线程安全的、同步的访问（读写）缓存文件支撑</li>
         <li>提供了后台并发处理缓存文件的线程数量的选项</li>
         <li>提供了触发后台处理线程工作的触发器选项：a.当第一个缓存文件产生时，即启动后台处理缓存文件,默认值;b.手动调用Strat接口启动。无论何时多次Start并不会造成更多线程的开销，它是受状态控制的，且是线程安全的，即在多个线程中同时调用了Start方法，依然只有一次是成功的，其他的调用将会直接返回“Already Started”。</li>
         </ul>
         </small>
-        
+
         <h2>     Summary</h2>
-        <p>Service Cycle的设计是对服务的专注实现。其区别于传统的三层，传统三层任务规划的十分明确，是严格独立的，层与层之间的交互是标准统一的，可以说是“无趣的“。而Service Cycle不一样，当你把他理解成环状之后，你会发现服务是以环状围绕在目标中心的，所有的服务还是为了支撑某一组件而构成的，它的紧密程度更加贴合，他们之间的交互更为紧密、无缝且是富有生机与活力的，可以自由想象和实现环与环之间的交互。</p>
-        <p>环（Cycle）与层（layer）在物理形状上的差异会影响设计者的程序设计，Cycle的向心力更加的强、目标更加的明确；Layer则更加的扁平、宽阔。所以Cycle更适合小型组件或目标性较强的组件实现，而Layer更适合实现企业级的宽泛实现。</p>
-        
+        <p>Service Circle的设计是对服务的专注实现。其区别于传统的三层，传统三层任务规划的十分明确，是严格独立的，层与层之间的交互是标准统一的，可以说是“无趣的“。而Service Circle不一样，当你把他理解成环状之后，你会发现服务是以环状围绕在目标中心的，所有的服务还是为了支撑某一组件而构成的，它的紧密程度更加贴合，他们之间的交互更为紧密、无缝且是富有生机与活力的，可以自由想象和实现环与环之间的交互。</p>
+        <p>环（Circle）与层（layer）在物理形状上的差异会影响设计者的程序设计，Circle的向心力更加的强、目标更加的明确；Layer则更加的扁平、宽阔。所以Circle更适合小型组件或目标性较强的组件实现，而Layer更适合实现企业级的宽泛实现。</p>
+
 		<div style="text-align:center;display:block;">
 		 <div style="border-top:1px dashed #cccccc;height: 1px;overflow:hidden;margin:10px;"></div>
  <image height="120px" width="120px" src="../images/payme.png" />
@@ -100,12 +100,12 @@
  <h3 style="color:red;font-weight:bold">If you want to pay for this</br>I will list your account name here.</br> HA HA!</h3>
  </div>
       </section>
-	  
-	  
+
+
       <footer>
 	  <p><small>QQ:<a href="javascript:void(0)">1010267566</a>
 		Email:<a href="mailto:denghejun@live.cn?subject=About%20Leo's%20Github%20Pages&body=Anything%20you%20want%20to%20say%20here%20...">denghejun@live.cn</a>
-		
+
 		<br/>Hosted on GitHub Pages <br/>&mdash;<a href="https://denghejun.github.io">colorfulwindmill</a></small></p>
 		<p>
 		<small>
